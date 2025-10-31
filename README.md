@@ -1,11 +1,11 @@
-<<<<<<< HEAD
+
 # Portfolio README
 
 ## Overview
 This portfolio showcases the work and achievements of Urja Gajera, a computer science and engineering student. It includes various sections such as About, Projects, Experience, Achievements, and Participation, each designed to provide insights into skills and experiences.
 
 ## Project Structure
-```
+ 
 portfolio
 ├── index.html          # Main entry point of the portfolio
 ├── me.html             # About section with a contact form
@@ -18,7 +18,7 @@ portfolio
 ├── js
 │   └── main.js         # JavaScript for interactivity
 └── README.md           # Documentation for the project
-```
+
 
 ## Features
 - **Responsive Design**: The portfolio is designed to be responsive, ensuring a good user experience on both desktop and mobile devices.
@@ -43,6 +43,3 @@ portfolio
 
 ## Contact
 For any inquiries or feedback, feel free to reach out via the contact form in the About section or connect with me on [LinkedIn](https://www.linkedin.com/in/urja-gajera-a70aa631a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app).
-=======
-# Portfolio
->>>>>>> 344e110680087b49cd6f053550e868e65aedf143
