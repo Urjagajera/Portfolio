@@ -1,0 +1,325 @@
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #4CAF50;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 12px 16px;
+    transition: background-color 0.25s, transform 0.25s;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+nav a:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+/* Global layout and theming */
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(180deg, #f7fbf7 0%, #ffffff 100%);
+    color: #222;
+    min-height: 100vh;
+}
+
+header {
+    text-align: center;
+    margin: 20px 0;
+    padding: 8px 16px;
+}
+
+/* Make certain header elements span the full viewport (full-bleed) while keeping content centered */
+header .container { position: relative; z-index: 2; }
+header .container > nav {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background-color: #4CAF50;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* Full-bleed horizontal rule */
+header .container > hr {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 2px;
+    border: none;
+    background: rgba(0, 0, 0, 0.26);
+}
+
+h1 {
+    color: #222;
+    margin: 6px 0 12px 0;
+    animation: fadeInUp 560ms ease both;
+}
+
+/* Main centers content and constrains width */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px 12px 60px 12px;
+    gap: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
+
+/* Make container content centered by default */
+.container { margin: 0 auto; text-align: center; }
+
+/* Grid for project cards */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+
+/* Courses section */
+.courses { margin: 20px 0; }
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.course-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.course-card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(0,0,0,0.08); }
+
+.project-card {
+    background: linear-gradient(180deg, #ffffff 0%, #fbfefb 100%);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 8px 22px rgba(20, 40, 30, 0.06);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+    transform-origin: center;
+    animation: fadeIn 520ms ease both;
+}
+
+.project-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 18px 40px rgba(20, 40, 30, 0.12);
+}
+
+.project-card h2 { margin-top: 0; }
+
+.project-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: #ffffff;
+    background: #4CAF50;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 180ms ease, transform 180ms ease;
+}
+
+.project-link:hover { background: #45a049; transform: translateY(-2px); }
+
+/* Experience grid */
+.experience-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 10px 0;
+}
+
+.experience-item {
+    background: linear-gradient(180deg, #ffffff 0%, #fcfdfc 100%);
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 6px 18px rgba(20, 40, 60, 0.05);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+    animation: fadeIn 540ms ease both;
+}
+
+.experience-item:hover { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(20,40,60,0.08); }
+
+/* Form layout improvements */
+form { display: block; width: 100%; max-width: 760px; margin: 0 auto; }
+.form-group { display:block; width:100%; margin-bottom: 12px; }
+label { display:block; margin-bottom:6px; font-weight:600; }
+input[type="text"], input[type="email"], textarea { width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; box-sizing:border-box; }
+button, input[type="submit"] { background:#4CAF50; color:#fff; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; }
+button:hover, input[type="submit"]:hover { background:#45a049; }
+
+
+
+
+/* Grid container */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* flexible columns */
+  gap: 40px; /* spacing between cards */
+  justify-content: center; /* center the grid */
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto; /* center the whole grid */
+}
+
+/* Each certificate card */
+.grid-item {
+  background-color: #f9f9f9; /* light background */
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* smooth hover effect */
+}
+
+.grid-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Certificate images */
+.certificate-img {
+  width: 100%; /* responsive width */
+  max-width: 600px;
+  height: auto; /* maintain aspect ratio */
+  border-radius: 8px;
+  margin-bottom: 15px;
+  object-fit: cover;
+}
+
+/* Certificate details text */
+.certificate-details {
+  text-align: left;
+  width: 100%;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Responsive text & spacing */
+@media (max-width: 1024px) {
+  .grid {
+    gap: 30px;
+  }
+  .certificate-details {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr; /* single column on tablets & mobile */
+    gap: 25px;
+    padding: 15px;
+  }
+  .certificate-img {
+    max-width: 100%; /* image fully responsive */
+  }
+  .certificate-details {
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    gap: 20px;
+    padding: 10px;
+  }
+  .certificate-details {
+    font-size: 0.85rem;
+  }
+}
+
+
+
+
+
+
+
+/* Profile photo */
+.profile-photo {
+    width: 300px;
+    height: 300px; /* make square */
+    max-width: 40%;
+    object-fit: cover; /* crop to fill square */
+    border-radius: 6px; /* slight rounding for aesthetics */
+    display: block;
+    margin: 12px auto;
+    box-shadow: 0 8px 20px rgba(10, 10, 10, 0.08);
+}
+
+.profile-position {
+    margin-top: 8px;
+    font-weight: 600;
+    color: #2e8b57; /* match footer light green */
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Footer styling: centered and light green */
+footer {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #22643f; /* light green */
+    background: rgba(78, 176, 120, 0.06);
+    padding: 12px 8px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    nav { flex-direction: column; }
+    header .container > nav { flex-direction: column; gap:6px; padding: 12px 8px; }
+    main { padding: 12px; }
+    h1 { font-size: 20px; }
+    .project-card, .experience-item { padding: 12px; }
+    .project-grid, .experience-grid, .grid { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+    h1 { font-size: 20px; }
+    .project-card, .experience-item { padding: 14px; }
+}
