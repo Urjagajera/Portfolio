@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Portfolio README
 
 ## Overview
@@ -42,3 +43,6 @@ portfolio
 
 ## Contact
 For any inquiries or feedback, feel free to reach out via the contact form in the About section or connect with me on [LinkedIn](https://www.linkedin.com/in/urja-gajera-a70aa631a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app).
+=======
+# Portfolio
+>>>>>>> 344e110680087b49cd6f053550e868e65aedf143
