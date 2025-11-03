@@ -181,6 +181,22 @@ button:hover, input[type="submit"]:hover { background:#45a049; }
 
 
 
+body {
+  background: linear-gradient(to top, #e0f7fa, #f1f8e9);
+}
+.certificate-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+
+
+
 
 /* Grid container */
 .grid {
