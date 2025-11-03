@@ -213,9 +213,9 @@ button:hover, input[type="submit"]:hover { background:#45a049; }
 
 /* Certificate images */
 .certificate-img {
-  width: 100%; /* responsive width */
-  max-width: 600px;
-  height: auto; /* maintain aspect ratio */
+ 
+  max-width: 500px;
+  height: 300px; 
   border-radius: 8px;
   margin-bottom: 15px;
   object-fit: cover;
