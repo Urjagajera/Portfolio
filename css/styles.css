@@ -172,12 +172,46 @@ main {
 .experience-item:hover { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(20,40,60,0.08); }
 
 /* Form layout improvements */
-form { display: block; width: 100%; max-width: 760px; margin: 0 auto; }
-.form-group { display:block; width:100%; margin-bottom: 12px; }
-label { display:block; margin-bottom:6px; font-weight:600; }
-input[type="text"], input[type="email"], textarea { width:100%; padding:10px; border:1px solid #ddd; border-radius:6px; box-sizing:border-box; }
-button, input[type="submit"] { background:#4CAF50; color:#fff; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; }
-button:hover, input[type="submit"]:hover { background:#45a049; }
+form { 
+  display: block; 
+  width: 100%;
+   max-width: 760px;
+    margin: 0 auto; 
+  }
+
+.form-group {
+   display:block; 
+   width:100%;
+    margin-bottom: 12px; 
+  }
+
+label {
+   display:block;
+    margin-bottom:6px; 
+    font-weight:600; 
+  }
+
+
+input[type="text"],
+ input[type="email"], 
+ textarea {
+   width:100%;
+    padding:10px; 
+    border:1px solid #ddd;
+     border-radius:6px; 
+     box-sizing:border-box; 
+    }
+
+button, input[type="submit"] { 
+  background:#4CAF50; 
+  color:#fff;
+   border:none; 
+   padding:10px 14px; 
+   border-radius:8px; 
+   cursor:pointer; }
+button:hover, input[type="submit"]:hover {
+   background:#45a049; 
+  }
 
 
 
