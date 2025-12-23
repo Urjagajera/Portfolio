@@ -25,7 +25,7 @@ nav a:hover {
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(180deg, #f7fbf7 0%, #ffffff 100%);
+    background: linear-gradient(180deg, #8af58a 0%, #0c8b76 100%);
     color: #222;
     min-height: 100vh;
 }
