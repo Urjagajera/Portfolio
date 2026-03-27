@@ -99,6 +99,52 @@
     candidates.forEach((el) => io.observe(el));
   }
 
+  function initHeroMotion() {
+    const hero = qs(".intro");
+    if (!hero) return;
+
+    if (!qs(".hero-orbs", hero)) {
+      const orbs = document.createElement("div");
+      orbs.className = "hero-orbs";
+      orbs.setAttribute("aria-hidden", "true");
+      orbs.innerHTML = `
+        <span class="orb orb--1"></span>
+        <span class="orb orb--2"></span>
+        <span class="orb orb--3"></span>
+      `;
+      hero.prepend(orbs);
+    }
+
+    const disableParallax =
+      prefersReducedMotion() || (window.matchMedia && window.matchMedia("(max-width: 768px)").matches);
+    if (disableParallax) return;
+
+    let rafId = 0;
+    let targetX = 0;
+    let targetY = 0;
+
+    const update = () => {
+      rafId = 0;
+      hero.style.setProperty("--mx", `${targetX}px`);
+      hero.style.setProperty("--my", `${targetY}px`);
+    };
+
+    hero.addEventListener("pointermove", (event) => {
+      const rect = hero.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      targetX = x * 10;
+      targetY = y * 10;
+      if (!rafId) rafId = requestAnimationFrame(update);
+    });
+
+    hero.addEventListener("pointerleave", () => {
+      targetX = 0;
+      targetY = 0;
+      if (!rafId) rafId = requestAnimationFrame(update);
+    });
+  }
+
   function initAccordionCertificates() {
     const grids = qsa(".grid");
     if (!grids.length) return;
@@ -107,7 +153,8 @@
       const items = qsa(".grid-item", grid);
       items.forEach((item, idx) => {
         const details = qs(".certificate-details", item);
-        if (!details) return;
+        const hasCertificateImage = Boolean(qs("img.certificate-img", item));
+        if (!details || !hasCertificateImage) return;
 
         // Make title row + button once (minimal HTML changes)
         if (!qs(".card-title", item)) {
@@ -392,8 +439,119 @@
     });
   }
 
+  function initTicTacToeWidget() {
+    if (qs(".ttt-widget")) return;
+
+    const widget = document.createElement("aside");
+    widget.className = "ttt-widget is-minimized";
+    widget.setAttribute("aria-label", "Tic Tac Toe widget");
+    widget.innerHTML = `
+      <button type="button" class="ttt-toggle" aria-expanded="false" aria-controls="ttt-panel">Tic Tac Toe</button>
+      <section class="ttt-panel" id="ttt-panel" hidden>
+        <div class="ttt-head">
+          <strong>Tic Tac Toe</strong>
+          <button type="button" class="btn ttt-reset">Reset</button>
+        </div>
+        <p class="ttt-status" aria-live="polite">Player X's turn</p>
+        <div class="ttt-board" role="grid" aria-label="Tic Tac Toe Board">
+          <button class="ttt-cell" type="button" data-idx="0" role="gridcell" aria-label="Cell 1"></button>
+          <button class="ttt-cell" type="button" data-idx="1" role="gridcell" aria-label="Cell 2"></button>
+          <button class="ttt-cell" type="button" data-idx="2" role="gridcell" aria-label="Cell 3"></button>
+          <button class="ttt-cell" type="button" data-idx="3" role="gridcell" aria-label="Cell 4"></button>
+          <button class="ttt-cell" type="button" data-idx="4" role="gridcell" aria-label="Cell 5"></button>
+          <button class="ttt-cell" type="button" data-idx="5" role="gridcell" aria-label="Cell 6"></button>
+          <button class="ttt-cell" type="button" data-idx="6" role="gridcell" aria-label="Cell 7"></button>
+          <button class="ttt-cell" type="button" data-idx="7" role="gridcell" aria-label="Cell 8"></button>
+          <button class="ttt-cell" type="button" data-idx="8" role="gridcell" aria-label="Cell 9"></button>
+        </div>
+      </section>
+    `;
+    document.body.appendChild(widget);
+
+    const panel = qs(".ttt-panel", widget);
+    const toggle = qs(".ttt-toggle", widget);
+    const status = qs(".ttt-status", widget);
+    const boardEl = qs(".ttt-board", widget);
+    const cells = qsa(".ttt-cell", widget);
+    const resetBtn = qs(".ttt-reset", widget);
+
+    let board = Array(9).fill("");
+    let current = "X";
+    let winner = "";
+
+    const lines = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6],
+    ];
+
+    const openPanel = () => {
+      widget.classList.remove("is-minimized");
+      toggle.setAttribute("aria-expanded", "true");
+      panel.hidden = false;
+    };
+
+    const closePanel = () => {
+      widget.classList.add("is-minimized");
+      toggle.setAttribute("aria-expanded", "false");
+      panel.hidden = true;
+    };
+
+    const render = () => {
+      cells.forEach((cell, i) => {
+        cell.textContent = board[i];
+        cell.disabled = Boolean(board[i]) || Boolean(winner);
+      });
+
+      if (winner) {
+        status.textContent = winner === "draw" ? "It's a draw" : `Player ${winner} wins`;
+        widget.classList.add("is-win");
+      } else {
+        status.textContent = `Player ${current}'s turn`;
+        widget.classList.remove("is-win");
+      }
+    };
+
+    const checkWinner = () => {
+      for (const [a, b, c] of lines) {
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) return board[a];
+      }
+      if (board.every(Boolean)) return "draw";
+      return "";
+    };
+
+    const reset = () => {
+      board = Array(9).fill("");
+      current = "X";
+      winner = "";
+      render();
+    };
+
+    toggle.addEventListener("click", () => {
+      const expanded = toggle.getAttribute("aria-expanded") === "true";
+      if (expanded) closePanel();
+      else openPanel();
+    });
+
+    boardEl.addEventListener("click", (event) => {
+      const cell = event.target instanceof Element ? event.target.closest(".ttt-cell") : null;
+      if (!cell || winner) return;
+      const idx = Number(cell.getAttribute("data-idx"));
+      if (!Number.isInteger(idx) || board[idx]) return;
+
+      board[idx] = current;
+      winner = checkWinner();
+      if (!winner) current = current === "X" ? "O" : "X";
+      render();
+    });
+
+    resetBtn?.addEventListener("click", reset);
+    render();
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     initThemeToggle();
+    initHeroMotion();
     initSmoothScrolling();
     initRevealAnimations();
     initAccordionCertificates();
@@ -401,5 +559,6 @@
     initImageModal();
     initAutoFilters(); // bonus (auto-infers tags)
     initContactForm();
+    initTicTacToeWidget();
   });
 })();

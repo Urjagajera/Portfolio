@@ -139,6 +139,20 @@ main {
   gap: 20px;
 }
 
+.intro {
+  position: relative;
+  overflow: clip;
+  isolation: isolate;
+  padding: 8px;
+  --mx: 0px;
+  --my: 0px;
+}
+
+.intro > *:not(.hero-orbs) {
+  position: relative;
+  z-index: 1;
+}
+
 .container {
   width: 100%;
   max-width: 1100px;
@@ -497,6 +511,8 @@ html[data-theme="dark"] .btn {
   margin: 12px auto;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
+  transform: translate3d(calc(var(--mx) * -0.2), calc(var(--my) * -0.2), 0);
+  transition: transform 280ms var(--ease);
 }
 
 .profile-position {
@@ -728,6 +744,162 @@ html[data-theme="dark"] .filter-chip {
 
 .filter-chip:hover {
   transform: translateY(-1px);
+}
+
+/* ---------- Hero floating motion ---------- */
+.hero-orbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(1px);
+  opacity: 0.35;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.orb--1 {
+  width: 220px;
+  height: 220px;
+  left: -40px;
+  top: 18px;
+  background: radial-gradient(circle at 30% 30%, rgba(56, 209, 111, 0.30), rgba(56, 209, 111, 0));
+  animation: orbFloatA 18s ease-in-out infinite;
+  transform: translate3d(calc(var(--mx) * -0.9), calc(var(--my) * -0.9), 0);
+}
+
+.orb--2 {
+  width: 180px;
+  height: 180px;
+  right: 4%;
+  top: 12%;
+  background: radial-gradient(circle at 40% 40%, rgba(12, 139, 118, 0.28), rgba(12, 139, 118, 0));
+  animation: orbFloatB 22s ease-in-out infinite;
+  transform: translate3d(calc(var(--mx) * 0.8), calc(var(--my) * 0.8), 0);
+}
+
+.orb--3 {
+  width: 240px;
+  height: 240px;
+  right: -40px;
+  bottom: -30px;
+  background: radial-gradient(circle at 55% 45%, rgba(46, 164, 79, 0.20), rgba(46, 164, 79, 0));
+  animation: orbFloatC 24s ease-in-out infinite;
+  transform: translate3d(calc(var(--mx) * 1.1), calc(var(--my) * 1.1), 0);
+}
+
+@keyframes orbFloatA {
+  0%, 100% { transform: translate3d(calc(var(--mx) * -0.9), calc(var(--my) * -0.9), 0); }
+  50% { transform: translate3d(calc(var(--mx) * -0.9), calc(var(--my) * -0.9 - 16px), 0); }
+}
+
+@keyframes orbFloatB {
+  0%, 100% { transform: translate3d(calc(var(--mx) * 0.8), calc(var(--my) * 0.8), 0); }
+  50% { transform: translate3d(calc(var(--mx) * 0.8 + 10px), calc(var(--my) * 0.8 - 12px), 0); }
+}
+
+@keyframes orbFloatC {
+  0%, 100% { transform: translate3d(calc(var(--mx) * 1.1), calc(var(--my) * 1.1), 0); }
+  50% { transform: translate3d(calc(var(--mx) * 1.1 - 8px), calc(var(--my) * 1.1 - 18px), 0); }
+}
+
+/* ---------- Tic Tac Toe widget ---------- */
+.ttt-widget {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: min(320px, calc(100vw - 24px));
+  z-index: 1200;
+}
+
+.ttt-toggle {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-solid);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  font-weight: 700;
+}
+
+.ttt-panel {
+  margin-top: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  padding: 10px;
+  transform-origin: bottom right;
+  animation: tttIn 220ms var(--ease);
+}
+
+@keyframes tttIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ttt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ttt-status {
+  margin: 8px 0 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.ttt-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.ttt-cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-solid);
+  color: var(--text);
+  font-size: 1.12rem;
+  font-weight: 800;
+  padding: 0;
+}
+
+.ttt-cell:hover:not(:disabled) {
+  border-color: rgba(46, 164, 79, 0.35);
+}
+
+.ttt-cell:disabled {
+  opacity: 1;
+}
+
+.ttt-widget.is-win .ttt-panel {
+  box-shadow: 0 0 0 2px rgba(46, 164, 79, 0.25), var(--shadow);
+}
+
+@media (max-width: 768px) {
+  .hero-orbs {
+    display: none;
+  }
+
+  .profile-photo {
+    transform: none;
+  }
+
+  .ttt-widget {
+    right: 10px;
+    bottom: 10px;
+    width: min(280px, calc(100vw - 20px));
+  }
 }
 
 @media (min-width: 601px) and (max-width: 900px) {
