@@ -2,7 +2,7 @@
 # Portfolio README
 
 ## Overview
-This portfolio showcases the work and achievements of Urja Gajera, a computer science and engineering student. It includes various sections such as About, Projects, Experience, Achievements, and Participation, each designed to provide insights into skills and experiences.
+This portfolio showcases the work and achievements of Urja Gajera, a computer science and engineering student. It includes various sections such as About, Projects, Achievements, and Participation, each designed to provide insights into skills and experiences.
 
 ## Project Structure
  
@@ -10,7 +10,6 @@ portfolio
 ├── index.html          # Main entry point of the portfolio
 ├── me.html             # About section with a contact form
 ├── projects.html       # Section dedicated to showcasing projects
-├── experience.html      # User's experience details
 ├── achievement.html     # Highlights of user's achievements
 ├── participation.html    # Details of user's participation in activities
 ├── css
