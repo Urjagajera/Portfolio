@@ -1,55 +1,405 @@
-// filepath: c:\vs code\html\portfolio\js\main.js
-document.addEventListener("DOMContentLoaded", function() {
-    // Form submission handler for the contact form in me.html
-    const contactForm = document.querySelector("form");
-    if (contactForm) {
-        contactForm.addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent the default form submission
+(() => {
+  "use strict";
 
-            const name = contactForm.querySelector("input[type='text']").value;
-            const email = contactForm.querySelector("input[type='email']").value;
-            const queries = contactForm.querySelector("textarea").value;
+  const STORAGE_THEME = "portfolio.theme";
 
-            if (validateForm(name, email, queries)) {
-                alert(`Thank you, ${name}! Your message has been sent.`);
-                contactForm.reset(); // Reset the form after submission
-            }
-        });
-    }
+  const prefersReducedMotion = () =>
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Function to validate the contact form
-    function validateForm(name, email, queries) {
-        if (!name || !email || !queries) {
-            alert("Please fill in all fields.");
-            return false;
-        }
-        if (!validateEmail(email)) {
-            alert("Please enter a valid email address.");
-            return false;
-        }
-        return true;
-    }
+  const qs = (sel, root = document) => root.querySelector(sel);
+  const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-    // Function to validate email format
-    function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(String(email).toLowerCase());
-    }
+  function setTheme(theme) {
+    const html = document.documentElement;
+    if (theme === "dark") html.setAttribute("data-theme", "dark");
+    else html.removeAttribute("data-theme");
+  }
 
-    // Smooth scrolling for navigation links
-    const navLinks = document.querySelectorAll("nav a");
-    navLinks.forEach(link => {
-        link.addEventListener("click", function(event) {
-            // Only intercept fragment/anchor links (e.g. "#about") for smooth scrolling.
-            // Links that point to other pages (e.g. "me.html") should navigate normally.
-            const href = this.getAttribute("href");
-            if (href && href.startsWith('#')) {
-                event.preventDefault();
-                const targetElement = document.querySelector(href);
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: "smooth" });
-                }
-            }
-        });
+  function getInitialTheme() {
+    const saved = localStorage.getItem(STORAGE_THEME);
+    if (saved === "dark" || saved === "light") return saved;
+    const systemDark =
+      window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return systemDark ? "dark" : "light";
+  }
+
+  function initThemeToggle() {
+    setTheme(getInitialTheme());
+
+    const nav = qs("header nav") || qs("nav");
+    if (!nav) return;
+
+    if (qs(".theme-toggle", nav)) return;
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "theme-toggle";
+    btn.setAttribute("aria-label", "Toggle dark mode");
+    btn.title = "Toggle theme";
+
+    const syncLabel = () => {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      btn.textContent = isDark ? "Dark" : "Light";
+    };
+
+    btn.addEventListener("click", () => {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      const next = isDark ? "light" : "dark";
+      setTheme(next);
+      localStorage.setItem(STORAGE_THEME, next);
+      syncLabel();
     });
-});
+
+    syncLabel();
+    nav.appendChild(btn);
+  }
+
+  function initSmoothScrolling() {
+    document.addEventListener("click", (event) => {
+      const link = event.target instanceof Element ? event.target.closest("a") : null;
+      if (!link) return;
+
+      const href = link.getAttribute("href");
+      if (!href || !href.startsWith("#")) return;
+
+      const target = qs(href);
+      if (!target) return;
+
+      event.preventDefault();
+      target.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth" });
+    });
+  }
+
+  function initRevealAnimations() {
+    const candidates = [
+      ...qsa(".grid-item"),
+      ...qsa(".project-card"),
+      ...qsa(".experience-item"),
+      ...qsa("main > section"),
+    ];
+
+    candidates.forEach((el) => el.classList.add("reveal"));
+    if (prefersReducedMotion()) {
+      candidates.forEach((el) => el.classList.add("is-visible"));
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -10% 0px" }
+    );
+
+    candidates.forEach((el) => io.observe(el));
+  }
+
+  function initAccordionCertificates() {
+    const grids = qsa(".grid");
+    if (!grids.length) return;
+
+    grids.forEach((grid) => {
+      const items = qsa(".grid-item", grid);
+      items.forEach((item, idx) => {
+        const details = qs(".certificate-details", item);
+        if (!details) return;
+
+        // Make title row + button once (minimal HTML changes)
+        if (!qs(".card-title", item)) {
+          const strong = qs("strong", item);
+          const titleText = strong ? strong.textContent.trim() : "Details";
+
+          const titleRow = document.createElement("div");
+          titleRow.className = "card-title";
+
+          const title = document.createElement("div");
+          title.textContent = titleText;
+
+          const actions = document.createElement("div");
+          actions.className = "card-actions";
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "btn js-accordion-toggle";
+          btn.textContent = "Details";
+
+          const panelId = `cert-details-${Math.random().toString(16).slice(2)}-${idx}`;
+          details.id = details.id || panelId;
+          btn.setAttribute("aria-controls", details.id);
+          btn.setAttribute("aria-expanded", "false");
+
+          actions.appendChild(btn);
+          titleRow.appendChild(title);
+          titleRow.appendChild(actions);
+
+          // Insert at the top, but keep original <strong> for content (we’ll visually replace it)
+          item.insertBefore(titleRow, item.firstChild);
+          if (strong) strong.style.display = "none";
+        }
+
+        // Collapse by default
+        details.hidden = true;
+      });
+
+      // Event delegation (accordion style: one open at a time per grid)
+      grid.addEventListener("click", (event) => {
+        const btn =
+          event.target instanceof Element
+            ? event.target.closest(".js-accordion-toggle")
+            : null;
+        if (!btn) return;
+
+        const id = btn.getAttribute("aria-controls");
+        if (!id) return;
+
+        const panel = document.getElementById(id);
+        if (!panel) return;
+
+        const isOpen = btn.getAttribute("aria-expanded") === "true";
+
+        qsa(".js-accordion-toggle", grid).forEach((b) => b.setAttribute("aria-expanded", "false"));
+        qsa(".certificate-details", grid).forEach((p) => (p.hidden = true));
+
+        if (!isOpen) {
+          btn.setAttribute("aria-expanded", "true");
+          panel.hidden = false;
+        }
+      });
+    });
+  }
+
+  function initCounters() {
+    const counters = qsa("[data-count-to]");
+    if (!counters.length) return;
+
+    const animate = (el) => {
+      const to = Number(el.getAttribute("data-count-to") || "0");
+      if (!Number.isFinite(to)) return;
+
+      const suffix = el.getAttribute("data-count-suffix") || "";
+      const duration = Number(el.getAttribute("data-count-duration") || "1200");
+      const start = performance.now();
+
+      const from = Number(el.getAttribute("data-count-from") || "0");
+      const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / Math.max(300, duration));
+        const value = Math.round(from + (to - from) * easeOut(t));
+        el.textContent = `${value}${suffix}`;
+        if (t < 1) requestAnimationFrame(tick);
+      };
+
+      requestAnimationFrame(tick);
+    };
+
+    if (prefersReducedMotion()) {
+      counters.forEach((el) => {
+        const to = el.getAttribute("data-count-to") || "0";
+        const suffix = el.getAttribute("data-count-suffix") || "";
+        el.textContent = `${to}${suffix}`;
+      });
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          animate(entry.target);
+          io.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.35 }
+    );
+
+    counters.forEach((el) => io.observe(el));
+  }
+
+  function ensureModal() {
+    let modal = qs(".modal");
+    if (modal) return modal;
+
+    modal = document.createElement("div");
+    modal.className = "modal";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-hidden", "true");
+
+    modal.innerHTML = `
+      <div class="modal__dialog">
+        <div class="modal__bar">
+          <div class="modal__title" data-modal-title>Preview</div>
+          <button type="button" class="btn" data-modal-close>Close</button>
+        </div>
+        <div class="modal__content">
+          <img class="modal__img" alt="" />
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    return modal;
+  }
+
+  function initImageModal() {
+    const modal = ensureModal();
+    const imgEl = qs(".modal__img", modal);
+    const titleEl = qs("[data-modal-title]", modal);
+    const closeBtn = qs("[data-modal-close]", modal);
+
+    const close = () => {
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden", "true");
+      imgEl.removeAttribute("src");
+      imgEl.alt = "";
+    };
+
+    closeBtn?.addEventListener("click", close);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("is-open")) close();
+    });
+
+    document.addEventListener("click", (event) => {
+      const img =
+        event.target instanceof Element ? event.target.closest("img.certificate-img") : null;
+      if (!img) return;
+
+      const src = img.getAttribute("src");
+      if (!src) return;
+
+      const alt = img.getAttribute("alt") || "Certificate image";
+      titleEl.textContent = alt;
+      imgEl.src = src;
+      imgEl.alt = alt;
+
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+    });
+  }
+
+  function inferTagsFromText(text) {
+    const t = (text || "").toLowerCase();
+    const tags = new Set();
+    if (t.includes("hackathon")) tags.add("Hackathon");
+    if (t.includes("volunteer") || t.includes("volunteering")) tags.add("Volunteering");
+    if (t.includes("course") || t.includes("coursera") || t.includes("learn")) tags.add("Courses");
+    if (t.includes("workshop") || t.includes("session") || t.includes("seminar")) tags.add("Workshops");
+    if (t.includes("participation") || t.includes("participated")) tags.add("Participation");
+    if (t.includes("achievement") || t.includes("badge") || t.includes("problems solved"))
+      tags.add("Achievements");
+    return Array.from(tags);
+  }
+
+  function initAutoFilters() {
+    const grid = qs("main .grid");
+    if (!grid) return;
+
+    const items = qsa(".grid-item", grid);
+    if (items.length < 6) return; // avoid noise on tiny lists
+
+    // Assign inferred tags once if missing
+    items.forEach((item) => {
+      if (item.getAttribute("data-tags")) return;
+      const title = (qs(".card-title", item)?.textContent || qs("strong", item)?.textContent || "").trim();
+      const details = qs(".certificate-details", item)?.textContent || "";
+      const tags = inferTagsFromText(`${title} ${details}`);
+      if (tags.length) item.setAttribute("data-tags", tags.join(","));
+    });
+
+    const allTags = new Set();
+    items.forEach((item) => {
+      (item.getAttribute("data-tags") || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .forEach((tag) => allTags.add(tag));
+    });
+
+    const tags = ["All", ...Array.from(allTags)];
+    if (tags.length <= 2) return;
+
+    if (qs(".filters")) return;
+
+    const bar = document.createElement("div");
+    bar.className = "filters";
+    bar.setAttribute("data-filter-bar", "true");
+
+    const makeChip = (label) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "filter-chip";
+      b.textContent = label;
+      b.setAttribute("aria-pressed", label === "All" ? "true" : "false");
+      b.dataset.filter = label;
+      return b;
+    };
+
+    tags.forEach((t) => bar.appendChild(makeChip(t)));
+    grid.parentElement?.insertBefore(bar, grid);
+
+    bar.addEventListener("click", (event) => {
+      const chip = event.target instanceof Element ? event.target.closest(".filter-chip") : null;
+      if (!chip) return;
+
+      const selected = chip.dataset.filter || "All";
+      qsa(".filter-chip", bar).forEach((c) =>
+        c.setAttribute("aria-pressed", c === chip ? "true" : "false")
+      );
+
+      items.forEach((item) => {
+        const itemTags = (item.getAttribute("data-tags") || "")
+          .split(",")
+          .map((s) => s.trim());
+        const show = selected === "All" || itemTags.includes(selected);
+        item.style.display = show ? "" : "none";
+      });
+    });
+  }
+
+  function initContactForm() {
+    const contactForm = qs("#contactForm") || qs("form");
+    if (!contactForm) return;
+
+    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
+
+    contactForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const name = (qs("input[type='text']", contactForm)?.value || "").trim();
+      const email = (qs("input[type='email']", contactForm)?.value || "").trim();
+      const queries = (qs("textarea", contactForm)?.value || "").trim();
+
+      if (!name || !email || !queries) {
+        alert("Please fill in all fields.");
+        return;
+      }
+      if (!validateEmail(email)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
+      alert(`Thank you, ${name}! Your message has been sent.`);
+      contactForm.reset();
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initThemeToggle();
+    initSmoothScrolling();
+    initRevealAnimations();
+    initAccordionCertificates();
+    initCounters();
+    initImageModal();
+    initAutoFilters(); // bonus (auto-infers tags)
+    initContactForm();
+  });
+})();
