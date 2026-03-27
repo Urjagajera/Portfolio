@@ -439,6 +439,36 @@
     });
   }
 
+  function initProjectCards() {
+    const grid = qs(".project-grid");
+    if (!grid) return;
+
+    qsa(".project-card", grid).forEach((card) => {
+      const details = qs(".project-details", card);
+      if (!details) return;
+      card.classList.remove("is-open");
+      details.setAttribute("aria-hidden", "true");
+    });
+
+    grid.addEventListener("click", (event) => {
+      const btn =
+        event.target instanceof Element ? event.target.closest(".js-project-toggle") : null;
+      if (!btn) return;
+
+      const card = btn.closest(".project-card");
+      if (!card) return;
+
+      const details = qs(".project-details", card);
+      if (!details) return;
+
+      const isOpen = card.classList.contains("is-open");
+      card.classList.toggle("is-open", !isOpen);
+      btn.setAttribute("aria-expanded", isOpen ? "false" : "true");
+      details.setAttribute("aria-hidden", isOpen ? "true" : "false");
+      btn.textContent = isOpen ? "View Details" : "Hide Details";
+    });
+  }
+
   function initTicTacToeWidget() {
     if (qs(".ttt-widget")) return;
 
@@ -559,6 +589,7 @@
     initImageModal();
     initAutoFilters(); // bonus (auto-infers tags)
     initContactForm();
+    initProjectCards();
     initTicTacToeWidget();
   });
 })();

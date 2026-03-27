@@ -188,7 +188,7 @@ a:hover {
 /* Grid for project cards */
 .project-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
   width: 100%;
   max-width: 1100px;
@@ -240,13 +240,53 @@ a:hover {
 
 .project-card h2 {
   margin-top: 0;
+  margin-bottom: 8px;
+}
+
+html[data-theme="dark"] .project-card {
+  background: linear-gradient(180deg, rgba(18, 30, 23, 0.95) 0%, rgba(10, 20, 15, 0.95) 100%);
+  border: 1px solid var(--border);
+}
+
+.project-card p {
+  margin: 0 0 12px 0;
+  color: var(--muted);
+}
+
+.project-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--text);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+html[data-theme="dark"] .tech-badge {
+  background: rgba(12, 20, 15, 0.62);
+}
+
+.project-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .project-link {
   display: inline-block;
-  margin-top: 12px;
   color: #ffffff;
-  background: #4CAF50;
+  background: var(--brand);
   padding: 8px 12px;
   border-radius: 8px;
   text-decoration: none;
@@ -254,8 +294,38 @@ a:hover {
 }
 
 .project-link:hover {
-  background: #45a049;
+  filter: brightness(0.95);
   transform: translateY(-2px);
+}
+
+.project-details {
+  margin-top: 0;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: max-height 320ms var(--ease), opacity 260ms var(--ease), transform 260ms var(--ease), margin-top 260ms var(--ease);
+}
+
+.project-card.is-open .project-details {
+  margin-top: 12px;
+  max-height: 420px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.project-details h3 {
+  margin: 0 0 6px 0;
+  font-size: 0.95rem;
+}
+
+html[data-theme="dark"] .project-details h3 {
+  color: var(--text);
+}
+
+.project-details ul {
+  margin: 0 0 10px 18px;
+  padding: 0;
 }
 
 /* Experience grid */
@@ -587,6 +657,12 @@ footer {
   .project-grid,
   .experience-grid,
   .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .project-grid {
     grid-template-columns: 1fr;
   }
 }
