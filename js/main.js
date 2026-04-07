@@ -58,14 +58,9 @@
   function initThemeToggle() {
     setTheme(getInitialTheme());
 
-    const nav = qs("header nav") || qs("nav");
-    if (!nav) return;
-
-    if (qs(".theme-toggle", nav)) return;
-
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "theme-toggle";
+    btn.className = "theme-toggle theme-fab";
     btn.setAttribute("aria-label", "Toggle dark mode");
     btn.title = "Toggle theme";
 
@@ -83,7 +78,7 @@
     });
 
     syncLabel();
-    nav.appendChild(btn);
+    if (!qs(".theme-fab")) document.body.appendChild(btn);
   }
 
   function ensureTransitionOverlay() {
@@ -260,6 +255,37 @@
       targetX = 0;
       targetY = 0;
       if (!rafId) rafId = requestAnimationFrame(update);
+    });
+  }
+
+  function initDashboardTilt() {
+    const grid = qs(".portal-grid");
+    const root = qs(".dashboard");
+    if (!grid || !root) return;
+    if (prefersReducedMotion() || isSmallScreen()) return;
+
+    let rafId = 0;
+    let rx = 0;
+    let ry = 0;
+
+    const apply = () => {
+      rafId = 0;
+      grid.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+    };
+
+    root.addEventListener("pointermove", (event) => {
+      const rect = root.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      rx = (-y * 6).toFixed(2);
+      ry = (x * 7).toFixed(2);
+      if (!rafId) rafId = requestAnimationFrame(apply);
+    });
+
+    root.addEventListener("pointerleave", () => {
+      rx = 0;
+      ry = 0;
+      if (!rafId) rafId = requestAnimationFrame(apply);
     });
   }
 
@@ -769,5 +795,6 @@
     initTicTacToeWidget();
     initCursorGlow();
     initProgressUI();
+    initDashboardTilt();
   });
 })();
