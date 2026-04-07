@@ -23,14 +23,61 @@
         </div>
     </header>
 
-    <main>
-        <section class="intro">
-            <h1>Welcome!!</h1>
-            <img src="src/photo.jpg" alt="Urja Gajera" class="profile-photo"
-                onerror="this.onerror=null; this.src='src/profile.svg';">
-            <p>I am <b>Urja Gajera</b>, a passionate computer science and engineering student at CSPIT, CHARUSAT. I love
-                building creative solutions and exploring the world of technology.<br>
-            </p>
+    <main class="dashboard">
+        <section class="intro dashboard-hero" aria-label="Dashboard">
+            <div class="boot-title">
+                <h1>Dashboard</h1>
+                <p class="boot-subtitle">Choose a portal to explore.</p>
+            </div>
+
+            <section class="portal-grid" aria-label="Portals">
+                <a class="portal portal--projects js-portal" href="projects.html" data-section="projects"
+                    data-portal-color="blue">
+                    <span class="portal__label">Projects</span>
+                    <span class="portal__hint">Enter</span>
+                </a>
+                <a class="portal portal--certs js-portal" href="achievement.html" data-section="certificates"
+                    data-portal-color="purple">
+                    <span class="portal__label">Certificates</span>
+                    <span class="portal__hint">Enter</span>
+                </a>
+                <a class="portal portal--skills js-portal" href="#skills" data-section="skills" data-portal-color="green">
+                    <span class="portal__label">Skills</span>
+                    <span class="portal__hint">View</span>
+                </a>
+                <a class="portal portal--about js-portal" href="me.html" data-section="about" data-portal-color="orange">
+                    <span class="portal__label">About</span>
+                    <span class="portal__hint">Enter</span>
+                </a>
+                <a class="portal portal--contact js-portal" href="me.html#contactForm" data-section="contact"
+                    data-portal-color="pink">
+                    <span class="portal__label">Contact</span>
+                    <span class="portal__hint">Enter</span>
+                </a>
+                <a class="portal portal--participation js-portal" href="participation.html" data-section="participation"
+                    data-portal-color="teal">
+                    <span class="portal__label">Participation</span>
+                    <span class="portal__hint">Enter</span>
+                </a>
+            </section>
+
+            <section class="progress-panel" aria-label="Progress">
+                <div class="progress-row">
+                    <strong>Portfolio explored:</strong>
+                    <span data-progress-text>0%</span>
+                </div>
+                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                    aria-valuenow="0">
+                    <div class="progress-fill" data-progress-fill></div>
+                </div>
+            </section>
+
+            <section class="dashboard-profile" aria-label="Profile">
+                <img src="src/photo.jpg" alt="Urja Gajera" class="profile-photo"
+                    onerror="this.onerror=null; this.src='src/profile.svg';">
+                <p class="dashboard-bio">I am <b>Urja Gajera</b>, a passionate computer science and engineering student at
+                    CSPIT, CHARUSAT. I love building creative solutions and exploring the world of technology.</p>
+            </section>
 
             <section class="grid" aria-label="Highlights">
                 <div class="grid-item">
@@ -43,7 +90,7 @@
                 </div>
             </section>
 
-            <section class="grid">
+            <section id="skills" class="grid" aria-label="Skills and more">
                 <div class="grid-item">
                     <h2>Skills</h2>
                     <ul>
@@ -82,7 +129,7 @@
                     </ul>
                 </div>
             </section>
-
+        </section>
     </main>
 
     <footer>

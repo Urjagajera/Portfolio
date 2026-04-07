@@ -2,12 +2,44 @@
   "use strict";
 
   const STORAGE_THEME = "portfolio.theme";
+  const STORAGE_PROGRESS = "portfolio.progress.v1";
+  const STORAGE_LAST_PORTAL = "portfolio.lastPortal";
 
   const prefersReducedMotion = () =>
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  const isSmallScreen = () =>
+    window.matchMedia && window.matchMedia("(max-width: 768px)").matches;
+
   const qs = (sel, root = document) => root.querySelector(sel);
   const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+  function loadProgress() {
+    try {
+      const raw = localStorage.getItem(STORAGE_PROGRESS);
+      const parsed = raw ? JSON.parse(raw) : null;
+      if (!parsed || typeof parsed !== "object") return { visited: {} };
+      if (!parsed.visited || typeof parsed.visited !== "object") return { visited: {} };
+      return parsed;
+    } catch {
+      return { visited: {} };
+    }
+  }
+
+  function saveProgress(progress) {
+    try {
+      localStorage.setItem(STORAGE_PROGRESS, JSON.stringify(progress));
+    } catch {
+      // ignore
+    }
+  }
+
+  function markVisited(sectionKey) {
+    if (!sectionKey) return;
+    const progress = loadProgress();
+    progress.visited[sectionKey] = true;
+    saveProgress(progress);
+  }
 
   function setTheme(theme) {
     const html = document.documentElement;
@@ -54,6 +86,44 @@
     nav.appendChild(btn);
   }
 
+  function ensureTransitionOverlay() {
+    let overlay = qs(".page-transition");
+    if (overlay) return overlay;
+    overlay = document.createElement("div");
+    overlay.className = "page-transition";
+    overlay.setAttribute("aria-hidden", "true");
+    document.body.appendChild(overlay);
+    return overlay;
+  }
+
+  function runPageTransition(variant = "enter") {
+    if (prefersReducedMotion()) return Promise.resolve();
+    const overlay = ensureTransitionOverlay();
+    overlay.classList.add("is-entering");
+    return new Promise((resolve) => {
+      window.setTimeout(() => {
+        overlay.classList.remove("is-entering");
+        resolve();
+      }, variant === "enter" ? 260 : 260);
+    });
+  }
+
+  function initReturnToDashboard() {
+    const isDashboard = location.pathname.endsWith("index.html") || location.pathname.endsWith("/");
+    if (isDashboard) return;
+
+    if (qs(".return-dashboard")) return;
+
+    const a = document.createElement("a");
+    a.className = "return-dashboard js-return-dashboard";
+    a.href = "index.html";
+    a.innerHTML = `
+      <span class="return-dashboard__icon" aria-hidden="true">←</span>
+      <span>Return to Dashboard</span>
+    `;
+    document.body.appendChild(a);
+  }
+
   function initSmoothScrolling() {
     document.addEventListener("click", (event) => {
       const link = event.target instanceof Element ? event.target.closest("a") : null;
@@ -67,6 +137,54 @@
 
       event.preventDefault();
       target.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth" });
+    });
+  }
+
+  function initPortalNavigation() {
+    // Track current page visit (game progress)
+    const file = (location.pathname.split("/").pop() || "").toLowerCase();
+    if (file.includes("projects")) markVisited("projects");
+    else if (file.includes("achievement")) markVisited("certificates");
+    else if (file.includes("participation")) markVisited("participation");
+    else if (file.includes("me")) {
+      markVisited("about");
+      if (location.hash && location.hash.toLowerCase().includes("contact")) markVisited("contact");
+    } else if (file.includes("index") || file === "") {
+      markVisited("dashboard");
+    }
+
+    // Portal click transitions (dashboard portals + return button)
+    document.addEventListener("click", async (event) => {
+      const portal = event.target instanceof Element ? event.target.closest(".js-portal") : null;
+      const ret = event.target instanceof Element ? event.target.closest(".js-return-dashboard") : null;
+      const target = portal || ret;
+      if (!target) return;
+
+      const href = target.getAttribute("href");
+      if (!href) return;
+
+      // Allow default for same-page hash portals (smooth scroll handles it)
+      if (href.startsWith("#")) {
+        const sectionKey = portal?.getAttribute("data-section");
+        if (sectionKey) markVisited(sectionKey);
+        return;
+      }
+
+      // Store last portal color to help dashboard feel continuous
+      if (portal) {
+        const c = portal.getAttribute("data-portal-color") || "";
+        const sectionKey = portal.getAttribute("data-section") || "";
+        if (sectionKey) markVisited(sectionKey);
+        try {
+          localStorage.setItem(STORAGE_LAST_PORTAL, JSON.stringify({ c, t: Date.now() }));
+        } catch {
+          // ignore
+        }
+      }
+
+      event.preventDefault();
+      await runPageTransition("enter");
+      window.location.href = href;
     });
   }
 
@@ -469,6 +587,62 @@
     });
   }
 
+  function initCursorGlow() {
+    if (prefersReducedMotion() || isSmallScreen()) return;
+    if (qs(".cursor-glow")) return;
+
+    const glow = document.createElement("div");
+    glow.className = "cursor-glow";
+    glow.setAttribute("aria-hidden", "true");
+    document.body.appendChild(glow);
+
+    let rafId = 0;
+    let x = -999;
+    let y = -999;
+    let activeColor = "rgba(102, 182, 255, 0.18)";
+
+    const update = () => {
+      rafId = 0;
+      glow.style.transform = `translate3d(${x - 130}px, ${y - 130}px, 0)`;
+      glow.style.background = `radial-gradient(circle at 50% 50%, ${activeColor}, transparent 60%)`;
+    };
+
+    document.addEventListener("pointermove", (e) => {
+      x = e.clientX;
+      y = e.clientY;
+      if (!rafId) rafId = requestAnimationFrame(update);
+      glow.classList.add("is-on");
+    });
+
+    document.addEventListener("pointerleave", () => {
+      glow.classList.remove("is-on");
+    });
+
+    document.addEventListener("mouseover", (e) => {
+      const p = e.target instanceof Element ? e.target.closest(".portal") : null;
+      if (!p) return;
+      const style = getComputedStyle(p);
+      const c = style.getPropertyValue("--p").trim();
+      activeColor = c ? `color-mix(in srgb, ${c}, transparent 82%)` : "rgba(102, 182, 255, 0.18)";
+    });
+  }
+
+  function initProgressUI() {
+    const progressText = qs("[data-progress-text]");
+    const fill = qs("[data-progress-fill]");
+    const bar = qs(".progress-bar");
+    if (!progressText || !fill || !bar) return;
+
+    const progress = loadProgress();
+    const keys = ["projects", "certificates", "skills", "about", "contact", "participation"];
+    const visitedCount = keys.filter((k) => progress.visited[k]).length;
+    const pct = Math.round((visitedCount / keys.length) * 100);
+
+    progressText.textContent = `${pct}%`;
+    fill.style.width = `${pct}%`;
+    bar.setAttribute("aria-valuenow", String(pct));
+  }
+
   function initTicTacToeWidget() {
     if (qs(".ttt-widget")) return;
 
@@ -582,6 +756,8 @@
   document.addEventListener("DOMContentLoaded", () => {
     initThemeToggle();
     initHeroMotion();
+    initPortalNavigation();
+    initReturnToDashboard();
     initSmoothScrolling();
     initRevealAnimations();
     initAccordionCertificates();
@@ -591,5 +767,7 @@
     initContactForm();
     initProjectCards();
     initTicTacToeWidget();
+    initCursorGlow();
+    initProgressUI();
   });
 })();
