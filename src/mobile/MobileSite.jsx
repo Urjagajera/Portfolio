@@ -151,7 +151,7 @@ function Thumbs({ items, open }) {
     <div className="m-thumbs">
       {list.map((it, i) => (
         <button key={it.src} type="button" onClick={() => open(list, i)}>
-          <img src={it.src} alt={it.caption} loading="lazy" style={{ objectFit: it.src.includes('/certs/') ? 'contain' : 'cover' }} />
+          <img src={it.src} alt={it.caption} loading="lazy" style={{ objectFit: it.whole || it.src.includes('/certs/') ? 'contain' : 'cover' }} />
           <span>{it.caption}</span>
         </button>
       ))}
@@ -232,6 +232,8 @@ function Leadership({ open }) {
           <List items={l.points} />
         </div>
       ))}
+      <div className="m-label">On stage: presenting to the judges</div>
+      <LoopVideo {...R.LEADERSHIP_VIDEO} style={{ margin: '8px 0 4px' }} />
       <Thumbs items={R.LEADERSHIP_MEDIA} open={open} />
     </>
   );

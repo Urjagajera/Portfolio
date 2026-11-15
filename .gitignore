@@ -15,3 +15,6 @@ Thumbs.db
 # env files, never commit secrets
 .env
 .env.*
+
+# local video editing scratch
+.video-work/

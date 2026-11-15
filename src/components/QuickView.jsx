@@ -91,7 +91,7 @@ export default function QuickView({ open, onClose }) {
           <div className="qv-projects">
             {projects.map((p) => (
               <article key={p.name} className="qv-card">
-                {p.video && <LoopVideo src={p.video.src} poster={p.video.poster} caption="" className="qv-video" />}
+                {p.video && <LoopVideo src={p.video.src} poster={p.video.poster} ratio={p.video.ratio} caption="" className="qv-video" />}
                 <div className="qv-card-top"><b>{p.name}</b><span className="qv-muted">{p.badge.replace(/ - /, ' · ')}</span></div>
                 <p className="qv-p">{p.pitch}</p>
                 <p className="qv-tech">{firstTech(p.tech)}</p>

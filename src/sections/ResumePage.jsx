@@ -234,6 +234,8 @@ function Leadership() {
           <List items={l.points} />
         </div>
       ))}
+      <Label style={{ marginTop: 40 }}>On stage: presenting to the judges</Label>
+      <LoopVideo {...R.LEADERSHIP_VIDEO} />
       <Label style={{ marginTop: 40 }}>Events & certificates</Label>
       <Gallery items={R.LEADERSHIP_MEDIA} />
     </>

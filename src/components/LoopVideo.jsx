@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 // A short, silent, looping clip. It downloads nothing until it is about to scroll into view, plays only while
 // visible and pauses when it leaves, so it costs nothing for visitors who never reach it. With "reduce motion"
 // on, it shows the poster and native controls instead of autoplaying.
-export default function LoopVideo({ src, poster, caption, style, className = '' }) {
+export default function LoopVideo({ src, poster, caption, style, className = '', controls = false, ratio = '16 / 9' }) {
   const ref = useRef(null);
   const [near, setNear] = useState(false);
   const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -40,9 +40,9 @@ export default function LoopVideo({ src, poster, caption, style, className = '' 
         loop
         playsInline
         preload="none"
-        controls={reduce}
+        controls={reduce || controls}
         aria-label={caption}
-        style={{ display: 'block', width: '100%', aspectRatio: '16 / 9', objectFit: 'cover', background: '#111', borderRadius: 10, border: '1.5px solid #222' }}
+        style={{ display: 'block', width: '100%', aspectRatio: ratio, objectFit: controls ? 'contain' : 'cover', background: controls ? '#fafaf8' : '#111', borderRadius: 10, border: '1.5px solid #222' }}
       />
       {caption && <figcaption style={{ fontSize: 15, color: '#444', marginTop: 8 }}>{caption}</figcaption>}
     </figure>

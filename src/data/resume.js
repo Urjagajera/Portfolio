@@ -94,10 +94,10 @@ export const PROJECTS = [
     ],
     role: 'I was one of 2 full-stack developers in a 3-member team. I developed the React, TypeScript, Vite and Tailwind CSS frontend, including the full landing page, use case and ER diagrams, an interactive graph with node details, an editable solution blueprint and multilingual support. I also wrote the system prompts, built chat isolation, implemented RAG and chained the AI models into one pipeline for faster execution.',
     metrics: [['8', 'stages, idea to deploy'], ['3', 'LLM providers'], ['2nd', 'prize, CHAOS2COMMIT']],
-    diagram: { src: '/assets/resume/nirman-architecture.svg', caption: 'How Nirman works' },
+    diagram: { src: '/assets/resume/nirman-how-it-works.jpg', caption: 'How Nirman works', whole: true },
     shots: [png('nirman-1', 'Nirman workspaces dashboard'), png('nirman-2', 'CampusBridge — a generated app'), png('photo-nirman-prize', 'Receiving the 2nd prize at CHAOS2COMMIT')],
     tech: 'React, TypeScript, Vite, Tailwind CSS, Python, FastAPI, PostgreSQL, SQLAlchemy, Pydantic, Alembic, JWT, Docker, Groq, Google Gemini, OpenRouter',
-    video: { src: '/assets/resume/nirman-demo.mp4', poster: '/assets/resume/nirman-demo-poster.jpg', caption: 'Presenting Nirman live at CHAOS2COMMIT 2026' },
+    video: { src: '/assets/resume/nirman-product-demo.mp4', poster: '/assets/resume/nirman-product-demo-poster.jpg', caption: 'Product demo: idea to deployed app, end to end', controls: true, ratio: '1280 / 680' },
     achievement: '2nd Prize at CHAOS2COMMIT 2026, organized by Futurizzon Technologies, Ahmedabad.',
   },
   {
@@ -179,6 +179,13 @@ export const LEADERSHIP = [
     ],
   },
 ];
+// presenting Nirman live to the CHAOS2COMMIT 2026 judges (we won 2nd prize): shown on the Leadership page
+export const LEADERSHIP_VIDEO = {
+  src: '/assets/resume/nirman-presentation.mp4',
+  poster: '/assets/resume/nirman-presentation-poster.jpg',
+  caption: 'Presenting Nirman live to the judges at CHAOS2COMMIT 2026 (2nd prize)',
+};
+
 export const LEADERSHIP_MEDIA = [
   cert('ieee-sb-secretary.jpg', 'IEEE certificate: Secretary, Student Branch'),
   cert('ieee-wie-secretary.jpg', 'IEEE certificate: Secretary, WIE Affinity Group'),
