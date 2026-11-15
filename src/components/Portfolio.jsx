@@ -21,7 +21,7 @@ const TODO = [
   { t: 'Make just one more small change', Icon: SquareCheckBig },
 ];
 
-export function WindowButtons({ onClose, color = '#fff' }) {
+export function WindowButtons({ onClose, onMin, onMax, maximized = false, color = '#fff' }) {
   const b = {
     width: 22,
     height: 22,
@@ -37,11 +37,24 @@ export function WindowButtons({ onClose, color = '#fff' }) {
   };
   return (
     <div className="flex items-center" style={{ gap: 9 }}>
-      <span style={{ ...b, borderTopWidth: 0 }} />
-      <span style={{ ...b }}>
-        <i style={{ width: 10, height: 10, border: `2px solid ${color}`, display: 'block' }} />
-      </span>
-      <button aria-label="Close" onClick={onClose} style={b}>
+      {onMin ? (
+        <button aria-label="Minimize" title="Minimize" onClick={onMin} className="win-btn" style={{ ...b, borderTopWidth: 0 }} />
+      ) : <span style={{ ...b, borderTopWidth: 0 }} />}
+      {onMax ? (
+        <button aria-label={maximized ? 'Restore' : 'Maximize'} title={maximized ? 'Restore' : 'Maximize'} onClick={onMax} className="win-btn" style={b}>
+          {maximized ? (
+            // restore: two overlapping windows
+            <svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke={color} strokeWidth="1.8">
+              <rect x="1" y="4" width="8.5" height="8.5" /><path d="M4.5 4V1.2h8.3v8.3H9.6" />
+            </svg>
+          ) : <i style={{ width: 10, height: 10, border: `2px solid ${color}`, display: 'block' }} />}
+        </button>
+      ) : (
+        <span style={{ ...b }}>
+          <i style={{ width: 10, height: 10, border: `2px solid ${color}`, display: 'block' }} />
+        </span>
+      )}
+      <button aria-label="Close" title="Close" onClick={onClose} className="win-btn" style={b}>
         <svg viewBox="0 0 14 14" width="14" height="14" stroke={color} strokeWidth="1.8" strokeLinecap="square">
           <path d="M1 1L13 13M13 1L1 13" />
         </svg>
@@ -57,21 +70,41 @@ function Portfolio({ onOpenProject, fit = 1.155, onNote, onClose }) {
   const [note, setNoteRaw] = useState(false);
   const setNote = (v) => { setNoteRaw(v); onNote && onNote(v); };
   const [lbHost, setLbHost] = useState(null); // screenshots / certificates open over the whole window
+  // window state: minimised shrinks it into a taskbar chip; maximised hands the whole window to the open folder
+  const [win, setWin] = useState('normal'); // normal | max | min
+  const max = win === 'max';
+  const PANEL_L = max ? 61 : 323, PANEL_W = max ? 1061 : 799;
+  const slide = 'left .45s cubic-bezier(.2,.9,.3,1), width .45s cubic-bezier(.2,.9,.3,1)';
   return (
     <LightboxHost.Provider value={lbHost}>
-    <div className="relative" style={{ width: 1181, height: 737, transform: `scale(${fit})` }}>
+    <div
+      className="relative"
+      style={{
+        width: 1181, height: 737, transformOrigin: '50% 100%',
+        transform: win === 'min' ? `translateY(${Math.round(737 * fit * 0.1)}px) scale(${fit * 0.06})` : `scale(${fit})`,
+        opacity: win === 'min' ? 0 : 1, pointerEvents: win === 'min' ? 'none' : undefined,
+        transition: 'transform .5s cubic-bezier(.6,0,.3,1), opacity .4s ease .1s',
+      }}
+      aria-hidden={win === 'min' ? true : undefined}
+    >
       <div className="absolute inset-0" style={{ opacity: note ? 0.2 : 1, transition: 'opacity .9s ease' }}>
       <div className="absolute inset-0" style={{ border: '2px solid #222', background: '#fafaf8' }} />
       {/* title bar */}
       <div className="absolute flex items-center justify-between" style={{ left: 8, right: 8, top: 8, height: 26 }}>
         <div style={{ flex: 1, height: '100%', background: '#f2a05f', marginRight: 18 }} />
-        <WindowButtons onClose={() => onClose && onClose()} color="#222" />
+        <WindowButtons
+          onClose={() => { setWin('normal'); onClose && onClose(); }}
+          onMin={() => setWin('min')}
+          onMax={() => setWin(max ? 'normal' : 'max')}
+          maximized={max}
+          color="#222"
+        />
       </div>
       <div className="absolute" style={{ left: 8, right: 8, top: 39, height: 1, background: 'rgba(0,0,0,.45)' }} />
       <div className="absolute" style={{ left: 60, top: 64, fontSize: 20.95 }}>Portfolio &gt; Browse{sel && ` > ${FOLDERS.find((f) => f.id === sel).label}`}</div>
 
       {/* sidebar: the 9 resume files */}
-      <div className="absolute" style={{ left: 61, top: 100, width: 230, height: 567, border: '1px solid #222' }}>
+      <div className="absolute" style={{ left: 61, top: 100, width: 230, height: 567, border: '1px solid #222', opacity: max ? 0 : 1, transform: max ? 'translateX(-24px)' : 'none', pointerEvents: max ? 'none' : undefined, transition: 'opacity .3s ease, transform .45s cubic-bezier(.2,.9,.3,1)' }}>
         <div style={{ height: 37, borderBottom: '1px solid #222' }} />
         {FOLDERS.map((f, i) => (
           <button
@@ -103,7 +136,7 @@ function Portfolio({ onOpenProject, fit = 1.155, onNote, onClose }) {
       })}
 
       {sel === 'r-certificates' && (
-        <div key={sel} className="absolute fade-in" style={{ left: 323, top: 100, width: 799, height: 590, background: '#fff', border: '1px solid #222', overflow: 'hidden' }}>
+        <div key={sel} className="absolute fade-in" style={{ left: PANEL_L, top: 100, width: PANEL_W, height: 590, background: '#fff', border: '1px solid #222', overflow: 'hidden', transition: slide }}>
           <CertCanvas onBack={() => setSel(null)} />
         </div>
       )}
@@ -112,10 +145,10 @@ function Portfolio({ onOpenProject, fit = 1.155, onNote, onClose }) {
         <div
           key={sel}
           className="absolute fade-in grain"
-          style={{ left: 323, top: 100, width: 799, height: 590, background: '#fff', border: '1px solid #222', color: '#111', overflowY: 'auto', overscrollBehavior: 'contain' }}
+          style={{ left: PANEL_L, top: 100, width: PANEL_W, height: 590, background: '#fff', border: '1px solid #222', color: '#111', overflowY: 'auto', overscrollBehavior: 'contain', transition: slide }}
         >
           <div style={{ zoom: 0.715, padding: '36px 50px 45px' }}>
-            <ResumePage id={sel} nav={{ onBack: () => setSel(null) }} />
+            <ResumePage id={sel} wide={max} nav={{ onBack: () => setSel(null) }} />
           </div>
         </div>
       )}
@@ -124,6 +157,14 @@ function Portfolio({ onOpenProject, fit = 1.155, onNote, onClose }) {
       {note && <Notepad onClose={() => setNote(false)} />}
       <div ref={setLbHost} className="absolute inset-0 pointer-events-none" style={{ zIndex: 20 }} />
     </div>
+    {/* taskbar chip while minimised: click to bring the window back */}
+    {win === 'min' && (
+      <button type="button" className="win-chip" onClick={() => setWin('normal')} title="Restore window">
+        <FolderIcon color="#86aaaa" />
+        <span>Portfolio &gt; Browse</span>
+        <em>click to open</em>
+      </button>
+    )}
     </LightboxHost.Provider>
   );
 }

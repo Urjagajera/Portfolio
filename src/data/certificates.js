@@ -93,7 +93,7 @@ export const CERTS = [
     ],
   },
   {
-    id: 'odoo-hackathon', cat: 'Hackathons', file: 'odoo-hackathon.jpg', w: 1200, h: 1600,
+    id: 'odoo-hackathon', cat: 'Hackathons', file: 'odoo-hackathon.jpg', w: 1600, h: 1200,
     title: 'Odoo x CHARUSAT Hackathon 2025', by: 'TaxMate project, my first hackathon', date: '2 March 2025 (24 hours)',
     rows: [
       ['My role', 'Part of the API & Integration team: connecting financial APIs and backend services, working with real-time data and contributing to the smart automation capabilities.'],

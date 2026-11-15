@@ -472,12 +472,12 @@ export const RESUME_PAGES = {
   'r-contact': Contact,
 };
 
-export default function ResumePage({ id, nav }) {
+export default function ResumePage({ id, nav, wide = false }) {
   const C = RESUME_PAGES[id];
   const host = useContext(LightboxHost);
   const [lb, setLb] = useState(null);
   return (
-    <div style={{ maxWidth: 1000 }}>
+    <div style={{ maxWidth: wide ? 1400 : 1000, transition: 'max-width .45s cubic-bezier(.2,.9,.3,1)' }}>
       <OpenCtx.Provider value={(list, i) => setLb({ list, i })}>
         <C />
       </OpenCtx.Provider>
