@@ -69,6 +69,43 @@ a { color: inherit; }
 @keyframes visitorPing { 75%, 100% { transform: scale(2.4); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .visitor-dot::after { animation: none; } }
 
+/* ---------------------------------------------------------------- opening sequence */
+/* Everything here animates only transform + opacity (compositor-only), so it stays smooth while the page loads.
+   Delays are offset by --intro (set in src/lib/intro.js): longer when the curtain plays, near zero otherwise.
+   fill-mode "backwards" holds the start pose during the delay, then hands control back to the element's own
+   styles, so draggable stickers and hover effects keep working afterwards. */
+
+.intro-curtain { position: fixed; inset: 0; z-index: 2000; display: flex; pointer-events: none; }
+.intro-curtain i { flex: 1; height: 100%; transform-origin: top; animation: introStripe .62s cubic-bezier(.7,0,.25,1) both; }
+@keyframes introStripe { from { transform: translateY(0) } to { transform: translateY(-101%) } }
+.intro-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 10px; animation: introStamp .3s ease .42s both; }
+.intro-stamp b { display: grid; place-items: center; width: 74px; height: 74px; border: 3px solid #141414; border-radius: 20px; background: #fafaf8; box-shadow: 5px 5px 0 #141414; font-family: Georgia, 'Times New Roman', serif; font-size: 30px; color: #141414; }
+.intro-stamp span { font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 14px; letter-spacing: .08em; color: #141414; }
+@keyframes introStamp { from { opacity: 1 } to { opacity: 0 } }
+
+@keyframes introRise { from { opacity: 0; transform: translateY(34px) scale(.97) } to { opacity: 1; transform: none } }
+@keyframes introDrop { from { opacity: 0; transform: translateY(-22px) } to { opacity: 1; transform: none } }
+@keyframes introWord { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: none } }
+@keyframes introFade { from { opacity: 0 } to { opacity: 1 } }
+@keyframes introPop { 0% { opacity: 0; transform: scale(.3) rotate(-14deg) } 70% { opacity: 1; transform: scale(1.08) rotate(3deg) } 100% { opacity: 1; transform: none } }
+@keyframes introTab { from { transform: translateX(-110%) } to { transform: none } }
+
+.intro-rise { animation: introRise .9s cubic-bezier(.2,.9,.3,1) backwards; animation-delay: calc(var(--intro, 0ms) + var(--d, 0ms)); }
+.intro-drop { animation: introDrop .7s cubic-bezier(.2,.9,.3,1) backwards; animation-delay: calc(var(--intro, 0ms) + var(--d, 0ms)); }
+.intro-word { display: inline-block; animation: introWord .55s cubic-bezier(.2,.9,.3,1) backwards; animation-delay: calc(var(--intro, 0ms) + var(--d, 0ms)); }
+.intro-fade { animation: introFade .8s ease backwards; animation-delay: calc(var(--intro, 0ms) + var(--d, 0ms)); }
+.intro-pop { animation: introPop .65s cubic-bezier(.2,.9,.3,1.2) backwards; animation-delay: calc(var(--intro, 0ms) + var(--d, 0ms)); }
+.intro-tab { animation: introTab .55s cubic-bezier(.2,.9,.3,1.15) backwards; animation-delay: calc(var(--intro, 0ms) + var(--d, 0ms)); }
+
+/* the impact pills already rise in; start them after the name */
+.impact-pill { animation-delay: calc(var(--intro, 0ms) + var(--d, 900ms)) !important; }
+
+.intro-off .intro-curtain { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .intro-curtain { display: none; }
+  .intro-rise, .intro-drop, .intro-word, .intro-fade, .intro-pop, .intro-tab { animation: none !important; }
+}
+
 /* ---------------------------------------------------------------- recruiter extras */
 
 /* hero impact strip: pills rise in one after another */

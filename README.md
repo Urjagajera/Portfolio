@@ -2,7 +2,7 @@
 
 Personal portfolio of **Urja Gajera**, B.Tech CSE student at CHARUSAT: full-stack and AI developer, open to internships.
 
-**Live:** https://portfolio-urjagajeras-projects.vercel.app/ · **60-second summary:** add `#60s` to the link
+**Live:** https://urjagajera.vercel.app/ · **60-second summary:** add `#60s` to the link
 
 ## What's inside
 

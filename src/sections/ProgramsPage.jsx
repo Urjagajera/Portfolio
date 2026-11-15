@@ -96,8 +96,8 @@ export default function ProgramsPage() {
 
   return (
     <div className="relative" style={{ minHeight: 1600 }}>
-      <img src={asset('prog_corner.jpg')} alt="" draggable={false} className="absolute mul" style={{ left: 60, top: 0, width: 602 }} />
-      <img src={asset('prog_edge.jpg')} alt="" draggable={false} className="absolute mul" style={{ left: 1797, top: 0, width: 93 }} />
+      <img src={asset('prog_corner.jpg')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute mul" style={{ left: 60, top: 0, width: 602 }} />
+      <img src={asset('prog_edge.jpg')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute mul" style={{ left: 1797, top: 0, width: 93 }} />
 
       <div className="absolute w-full text-center font-display" style={{ top: 202, fontSize: 40, fontWeight: 800 }}>WHAT I BELIEVE</div>
       <MaskWord word="pgm" style={{ position: 'absolute', left: 360, top: 280 }} />
@@ -110,14 +110,14 @@ export default function ProgramsPage() {
       </div>
 
       {/* static stickers in the side margins */}
-      <img src={asset('about_face.jpg')} alt="" draggable={false} className="absolute mul pointer-events-none" style={{ left: 80, top: 640, width: 190 }} />
+      <img src={asset('about_face.jpg')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute mul pointer-events-none" style={{ left: 80, top: 640, width: 190 }} />
       <div className="absolute doodle-zoom" style={{ left: 1640, top: 640, width: 220, zIndex: 6 }}>
-        <img src="/assets/stickers/code_window.svg" alt="" draggable={false} className="block w-full select-none" />
+        <img src="/assets/stickers/code_window.svg" alt="" loading="lazy" decoding="async" draggable={false} className="block w-full select-none" />
       </div>
-      <img src={asset('dice.png')} alt="" draggable={false} className="absolute pointer-events-none" style={{ left: 140, top: 1290, width: 95, transform: 'rotate(-8deg)' }} />
-      <img src={asset('star.png')} alt="" draggable={false} className="absolute pointer-events-none" style={{ left: 1690, top: 1400, width: 120 }} />
+      <img src={asset('dice.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute pointer-events-none" style={{ left: 140, top: 1290, width: 95, transform: 'rotate(-8deg)' }} />
+      <img src={asset('star.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute pointer-events-none" style={{ left: 1690, top: 1400, width: 120 }} />
 
-      <img src={asset('prog_stickers.jpg')} alt="" draggable={false} className="absolute mul" style={{ left: 361, top: 1095, width: 362 }} />
+      <img src={asset('prog_stickers.jpg')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute mul" style={{ left: 361, top: 1095, width: 362 }} />
       <div className="absolute" style={{ left: 944, top: 1060, fontSize: 21, fontWeight: 700 }}>What I aim for:</div>
       <ul className="absolute list-none p-0 m-0" style={{ left: 908, top: 1136, width: 700, fontSize: 21 }}>
         {AIMS.map(([parts, w], i) => (

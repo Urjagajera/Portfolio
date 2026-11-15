@@ -8,7 +8,7 @@ const T = { fontSize: 23, lineHeight: '42px', color: '#444448' };
 
 export default function AboutPage() {
   const img = (n, l, t, w, extra) => (
-    <img src={asset(n)} alt="" draggable={false} className="absolute mul pointer-events-none" style={{ left: l, top: t, width: w, ...extra }} />
+    <img src={asset(n)} alt="" loading="lazy" decoding="async" draggable={false} className="absolute mul pointer-events-none" style={{ left: l, top: t, width: w, ...extra }} />
   );
   return (
     <div className="relative" style={{ height: 2380 }}>

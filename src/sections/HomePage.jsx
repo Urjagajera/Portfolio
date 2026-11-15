@@ -8,6 +8,7 @@ import { asset, clamp, easeInOut, useDesign } from '../lib/design';
 import { IMPACT, AVAILABILITY } from '../data/resume';
 import { useContactForm, honeypotProps } from '../lib/contactForm';
 import QuickView from '../components/QuickView';
+import { INTRO } from '../lib/intro';
 
 const SCENE_H = 1065;       // height of the painted BROWSE + PC composite
 const ZIN = 1300;           // scroll distance of the zoom into the monitor
@@ -37,11 +38,13 @@ function Hero({ onGo }) {
     try { if (window.location.hash === '#60s') history.replaceState(null, '', window.location.pathname + window.location.search); } catch { /* ignore */ }
   }, []);
 
-  // first line types itself in word by word (the recording starts mid-reveal)
+  // first line types itself in word by word, once the opening sequence has revealed it
   useEffect(() => {
-    let i = 0;
-    const id = setInterval(() => { i += 1; setShown(i); if (i >= P1.length) clearInterval(id); }, 170);
-    return () => clearInterval(id);
+    let i = 0, id = 0;
+    const start = setTimeout(() => {
+      id = setInterval(() => { i += 1; setShown(i); if (i >= P1.length) clearInterval(id); }, 170);
+    }, INTRO.delay + 1150);
+    return () => { clearTimeout(start); clearInterval(id); };
   }, []);
 
   // second line fades from pale grey to ink as the page scrolls
@@ -59,7 +62,7 @@ function Hero({ onGo }) {
     <section id="home" className="relative grain" style={{ height: HERO_H }}>
       <Header />
       <div className="absolute w-full flex items-center justify-center pointer-events-auto select-none" style={{ top: 215 }}>
-        <h1 className="m-0 flex items-center justify-center">
+        <h1 className="m-0 flex items-center justify-center intro-rise" style={{ '--d': '120ms' }}>
           <img
             src="/assets/urja_gajera_wordmark.png"
             alt="URJA GAJERA"
@@ -72,7 +75,7 @@ function Hero({ onGo }) {
         </h1>
       </div>
       {/* top-right: availability + recruiter shortcut */}
-      <div className="absolute flex items-center" style={{ right: 110, top: 20, gap: 12 }}>
+      <div className="absolute flex items-center intro-drop" style={{ right: 110, top: 20, gap: 12, '--d': '420ms' }}>
         <a href="#contact" className="hero-cta hero-cta-dark" onClick={(e) => { e.preventDefault(); onGo && onGo('contact'); }}>
           <i className="visitor-dot" aria-hidden="true" />{AVAILABILITY} <span aria-hidden="true">&rarr;</span>
         </a>
@@ -83,27 +86,29 @@ function Hero({ onGo }) {
       <QuickView open={quick} onClose={closeQuick} />
 
       <div className="absolute w-full text-center uppercase flex justify-center items-center" style={{ top: 518, fontSize: 22, gap: 20 }}>
-        <span>Build</span><span>·</span><span>Create</span><span>·</span><span>Explore</span>
+        {['Build', '·', 'Create', '·', 'Explore'].map((w, i) => (
+          <span key={i} className="intro-word" style={{ '--d': `${560 + i * 75}ms` }}>{w}</span>
+        ))}
       </div>
       {/* impact strip: the proof points a recruiter should see first */}
       <ul className="absolute flex justify-center list-none m-0 p-0" style={{ left: 260, right: 260, top: 574, gap: 12 }} aria-label="Highlights">
         {IMPACT.map(([v, l, s], i) => (
-          <li key={l} className="impact-pill" style={{ animationDelay: `${300 + i * 110}ms` }}><b>{v}</b>{s || l}</li>
+          <li key={l} className="impact-pill" style={{ '--d': `${880 + i * 90}ms` }}><b>{v}</b>{s || l}</li>
         ))}
       </ul>
-      <p className="absolute m-0" style={{ left: 515, top: 668, width: 440, fontSize: 25, lineHeight: '33px' }}>
+      <p className="absolute m-0 intro-fade" style={{ left: 515, top: 668, width: 440, fontSize: 25, lineHeight: '33px', '--d': '1050ms' }}>
         {P1.map((w, i) => (
           <span key={i} style={{ color: i < shown ? '#161616' : '#d2d2d6', transition: 'color .35s' }}>{w} </span>
         ))}
       </p>
-      <p className="absolute m-0" style={{ left: 515, top: 712, width: 440, fontSize: 25, lineHeight: '33px', color: `rgb(${grey},${grey},${grey + 4})` }}>
+      <p className="absolute m-0 intro-fade" style={{ left: 515, top: 712, width: 440, fontSize: 25, lineHeight: '33px', color: `rgb(${grey},${grey},${grey + 4})`, '--d': '1150ms' }}>
         I believe in words that are <span style={MOTTO_HL}>followed by action</span>.
       </p>
-      <img src={asset('gummy_yellow.png')} alt="" draggable={false} className="absolute pointer-events-none" style={{ left: 1322, top: 700, width: 75 }} />
-      <Doodle n="compass" x={160} y={120} w={120} r={-8} />
-      <Doodle n="cloud" x={1610} y={110} w={170} r={5} />
-      <Doodle n="rocket" x={170} y={640} w={150} r={-10} hint="fly me" />
-      <Doodle n="cat" x={1060} y={700} w={120} r={-4} hint="move me" />
+      <img src={asset('gummy_yellow.png')} alt="" draggable={false} className="absolute pointer-events-none intro-pop" style={{ left: 1322, top: 700, width: 75, '--d': '1500ms' }} />
+      <Doodle n="compass" x={160} y={120} w={120} r={-8} intro={700} />
+      <Doodle n="cloud" x={1610} y={110} w={170} r={5} intro={820} />
+      <Doodle n="rocket" x={170} y={640} w={150} r={-10} hint="fly me" intro={1250} />
+      <Doodle n="cat" x={1060} y={700} w={120} r={-4} hint="move me" intro={1380} />
     </section>
   );
 }
@@ -117,7 +122,7 @@ function DeskBackdrop({ opacity }) {
   const fade = { WebkitMaskImage: 'linear-gradient(transparent, #000 14%)', maskImage: 'linear-gradient(transparent, #000 14%)' };
   return (
     <div className="absolute pointer-events-none select-none" style={{ left: 0, top: 0, width: 1890, height: SCENE_H, opacity, willChange: 'opacity', ...fade }}>
-      <img src="/assets/desk/desk_scene.svg?v=15" alt="" draggable={false} style={{ display: 'block', width: 1890, height: SCENE_H }} />
+      <img src="/assets/desk/desk_scene.jpg" alt="" decoding="async" draggable={false} style={{ display: 'block', width: 1890, height: SCENE_H }} />
       <ClockHands />
     </div>
   );
@@ -157,9 +162,11 @@ function Computer({ on, setOn, onOpenProject, onMode }) {
   // doesn't land in the middle of the zoom and stall a frame
   const [warm, setWarm] = useState(false);
   useEffect(() => {
+    // ...but only after the opening sequence has finished, so it never costs the intro a frame
     const ric = window.requestIdleCallback;
-    const h = ric ? ric(() => setWarm(true), { timeout: 2500 }) : setTimeout(() => setWarm(true), 1200);
-    return () => (ric ? window.cancelIdleCallback(h) : clearTimeout(h));
+    let h = 0;
+    const t = setTimeout(() => { h = ric ? ric(() => setWarm(true), { timeout: 1500 }) : setTimeout(() => setWarm(true), 300); }, INTRO.delay + 2300);
+    return () => { clearTimeout(t); if (ric) window.cancelIdleCallback(h); else clearTimeout(h); };
   }, []);
 
   const pinStart = () => {
@@ -255,7 +262,7 @@ function Computer({ on, setOn, onOpenProject, onMode }) {
       <div className="sticky" style={{ top: (vh - SCENE_H) || 0, height: SCENE_H, width: 1890 }}>
         <div className="absolute inset-0" style={{ transform: `scale(${scale})`, transformOrigin: `${ORIGIN[0]}px ${ORIGIN[1]}px`, willChange: 'transform' }}>
           <DeskBackdrop opacity={Math.max(1 - clamp((p - 0.12) / 0.45), clamp((q - 0.2) / 0.6))} />
-          <img src={asset('browse_scene.png')} alt="Browse — vintage computer" draggable={false} style={{ position: 'relative', width: 1890, height: SCENE_H, display: 'block' }} />
+          <img src={asset('browse_scene.png')} alt="Browse — vintage computer" decoding="async" draggable={false} style={{ position: 'relative', width: 1890, height: SCENE_H, display: 'block' }} />
           <div className="absolute left-0 w-full pointer-events-none" style={{ top: 700, height: SCENE_H - 700, background: 'linear-gradient(rgba(250,250,248,0), #fafaf8 70%)', opacity: clamp(q * 2.5) }} />
           {!on && reveal < 0.5 && (
             <button
@@ -305,10 +312,10 @@ function HowDo({ onPrograms }) {
     <section id="how-do" className="relative" style={{ height: h - CUT }}>
       <div className="absolute left-0 w-full" style={{ top: -CUT, height: h }}>
       <div className="absolute grain" style={{ left: 0, top: CUT, width: 1890, height: h - CUT - 60, background: '#ececeb' }} />
-      <img src={asset('paper_bottom.jpg')} alt="" draggable={false} className="absolute left-0" style={{ top: 1138, width: 1890, height: 120 }} />
-      <img src={asset('dice.png')} alt="" draggable={false} className="absolute" style={{ left: 245, top: 338, width: 95 }} />
-      <img src={asset('star.png')} alt="" draggable={false} className="absolute" style={{ left: 158, top: 426, width: 134 }} />
-      <img src={asset('cat.png')} alt="" draggable={false} className="absolute" style={{ left: 1592, top: 868, width: 235 }} />
+      <img src={asset('paper_bottom.jpg')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute left-0" style={{ top: 1138, width: 1890, height: 120 }} />
+      <img src={asset('dice.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 245, top: 338, width: 95 }} />
+      <img src={asset('star.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 158, top: 426, width: 134 }} />
+      <img src={asset('cat.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 1592, top: 868, width: 235 }} />
       <Doodle n="magnifier" x={1420} y={380} w={130} r={-8} />
       <Doodle n="palette" x={190} y={800} w={140} r={-6} hint="pull me" />
       <Doodle n="code" x={1060} y={470} w={100} r={-6} />
@@ -348,7 +355,7 @@ function TealForm() {
 
   return (
     <section className="relative" style={{ height: 1150 }}>
-      <img src={asset('earphones.png')} alt="" draggable={false} className="absolute" style={{ left: 0, top: 745, width: 290 }} />
+      <img src={asset('earphones.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 0, top: 745, width: 290 }} />
       <div className="absolute grain" style={{ left: 265, top: 155, width: 1265, height: 877, background: '#8fe4e6', borderRadius: 52, transform: 'rotate(-.4deg)', boxShadow: '0 12px 30px rgba(0,0,0,.12)' }} />
       <form
         onSubmit={submit}
@@ -378,7 +385,7 @@ function TealForm() {
         </div>
         <a href="mailto:urjagajera12@gmail.com" className="absolute font-mono font-bold text-[#111] no-underline" style={{ left: 488, top: 748, fontSize: 25 }}>urjagajera12@gmail.com</a>
       </form>
-      <img src={asset('teal_sticker.png')} alt="" draggable={false} className="absolute" style={{ left: 1296, top: 571, width: 344 }} />
+      <img src={asset('teal_sticker.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 1296, top: 571, width: 344 }} />
       <Doodle n="cloud" x={50} y={170} w={150} r={-5} hint="push me" />
       <Doodle n="cat" x={930} y={800} w={115} r={4} />
       <Doodle n="palette" x={1630} y={190} w={130} r={6} />

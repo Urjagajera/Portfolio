@@ -11,6 +11,7 @@ import Lightbox from '../components/Lightbox';
 import Doodle from '../components/Doodle';
 import { BrandIcon } from '../components/BrandIcons';
 import { useContactForm, honeypotProps } from '../lib/contactForm';
+import { INTRO } from '../lib/intro';
 import './mobile.css';
 
 // The phone / small-tablet layout (< 900px wide). Same content as the desktop "desk" site, read from the same
@@ -49,7 +50,7 @@ function useActiveSection() {
 
 function TopBar({ active, pick, onQuick }) {
   return (
-    <header className="m-bar">
+    <header className="m-bar intro-drop" style={{ '--d': '150ms' }}>
       <div className="m-bar-row">
         <button type="button" className="m-brand" onClick={() => go('home')}>Urja Gajera</button>
         <button type="button" className="m-quick" onClick={onQuick} aria-haspopup="dialog">&#9201; 60-sec view</button>
@@ -84,40 +85,46 @@ const P1 = 'I don’t just believe in words.'.split(' ');
 function Hero({ onQuick }) {
   const [shown, setShown] = useState(0);
   useEffect(() => {
-    let i = 0;
-    const id = setInterval(() => { i += 1; setShown(i); if (i >= P1.length) clearInterval(id); }, 170);
-    return () => clearInterval(id);
+    let i = 0, id = 0;
+    const start = setTimeout(() => {
+      id = setInterval(() => { i += 1; setShown(i); if (i >= P1.length) clearInterval(id); }, 170);
+    }, INTRO.delay + 1100);
+    return () => { clearTimeout(start); clearInterval(id); };
   }, []);
   return (
     <section id="m-home" className="m-hero grain">
-      <div className="m-topline">
+      <div className="m-topline intro-fade" style={{ '--d': '300ms' }}>
         <a href={`mailto:${R.CONTACT.email}`}>{R.CONTACT.email}</a>
         <a href={R.RESUME_PDF} target="_blank" rel="noreferrer" download className="underline">resume &#8595;</a>
       </div>
-      <h1 className="m-0">
+      <h1 className="m-0 intro-rise" style={{ '--d': '200ms' }}>
         <img className="m-wordmark" src="/assets/urja_gajera_wordmark.png" alt="URJA GAJERA" width="1864" height="252" fetchPriority="high" draggable={false} />
       </h1>
-      <p className="m-tagline">Build · Create · Explore</p>
-      <p className="m-headline">{R.HEADLINE}</p>
-      <div className="m-status">
+      <p className="m-tagline">
+        {['Build', '·', 'Create', '·', 'Explore'].map((w, i) => (
+          <span key={i} className="intro-word" style={{ '--d': `${520 + i * 70}ms`, margin: '0 .18em' }}>{w}</span>
+        ))}
+      </p>
+      <p className="m-headline intro-fade" style={{ '--d': '780ms' }}>{R.HEADLINE}</p>
+      <div className="m-status intro-fade" style={{ '--d': '880ms' }}>
         <button type="button" className="m-open" onClick={() => go('contact')}><i className="visitor-dot" aria-hidden="true" />{R.AVAILABILITY} &rarr;</button>
         <VisitorCount />
       </div>
       <ul className="m-pills" aria-label="Highlights">
-        {R.IMPACT.map(([v, , s], i) => <li key={s} className="impact-pill" style={{ animationDelay: `${200 + i * 90}ms` }}><b>{v}</b>{s}</li>)}
+        {R.IMPACT.map(([v, , s], i) => <li key={s} className="impact-pill" style={{ '--d': `${960 + i * 80}ms` }}><b>{v}</b>{s}</li>)}
       </ul>
-      <p className="m-motto">
+      <p className="m-motto intro-fade" style={{ '--d': '1250ms' }}>
         {P1.map((w, i) => <span key={i} style={{ color: i < shown ? '#161616' : '#c9c9cf', transition: 'color .35s' }}>{w} </span>)}
         <br />I believe in words that are <span className="m-hl">followed by action</span>.
       </p>
-      <div className="m-cta">
+      <div className="m-cta intro-fade" style={{ '--d': '1350ms' }}>
         <button type="button" className="m-btn m-btn-dark" onClick={onQuick}>&#9201; 60-second view</button>
         <a className="m-btn" href={R.RESUME_PDF} target="_blank" rel="noreferrer" download>Download resume &#8595;</a>
       </div>
       <div className="m-play" aria-label="Stickers you can drag">
-        <Doodle n="rocket" x={6} y={10} w={78} r={-10} hint="fly me" />
-        <Doodle n="cat" x={120} y={22} w={70} r={-4} />
-        <Doodle n="compass" x={220} y={8} w={64} r={-8} hint="move me" />
+        <Doodle n="rocket" x={6} y={10} w={78} r={-10} hint="fly me" intro={1450} />
+        <Doodle n="cat" x={120} y={22} w={70} r={-4} intro={1550} />
+        <Doodle n="compass" x={220} y={8} w={64} r={-8} hint="move me" intro={1650} />
       </div>
     </section>
   );

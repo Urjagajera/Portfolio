@@ -9,7 +9,7 @@ const BOUNCE = 0.88;
 // bouncing off the edges. Pass `hint` (e.g. "drag me") for an optional handwritten label that fades once touched.
 // `src` overrides the doodle file (e.g. a sticker); `zoom` adds a gentle grow-and-lift when the cursor is over it;
 // `spin={false}` keeps it upright when thrown (for stickers with text).
-export default function Doodle({ n, src, x, y, w = 120, r = 0, z = 0, hint, zoom, spin = true }) {
+export default function Doodle({ n, src, x, y, w = 120, r = 0, z = 0, hint, zoom, spin = true, intro }) {
   const box = useRef(null);
   const img = useRef(null);
   const s = useRef({ dx: 0, dy: 0, rot: r, vx: 0, vy: 0, va: 0, drag: null, raf: 0, t: 0 });
@@ -101,8 +101,11 @@ export default function Doodle({ n, src, x, y, w = 120, r = 0, z = 0, hint, zoom
       className="absolute select-none"
       style={{ left: x, top: y, width: w, zIndex: z, cursor: 'grab', touchAction: 'none' }}
     >
+      {/* `intro` (ms): pop in during the opening sequence. It animates this wrapper, never the draggable box,
+          so dragging and throwing are unaffected once it has played. */}
+      <div className={intro != null ? 'intro-pop' : undefined} style={intro != null ? { '--d': `${intro}ms` } : undefined}>
       <div className={zoom ? 'doodle-zoom' : undefined}>
-        <img ref={img} src={src || `/assets/doodles/${n}.svg`} alt="" draggable={false} className="block w-full" style={{ transform: `rotate(${r}deg)` }} />
+        <img ref={img} src={src || `/assets/doodles/${n}.svg`} alt="" loading={intro != null ? undefined : 'lazy'} decoding="async" draggable={false} className="block w-full" style={{ transform: `rotate(${r}deg)` }} />
       </div>
       {hint && <div
         className="text-center whitespace-nowrap pointer-events-none"
@@ -114,6 +117,7 @@ export default function Doodle({ n, src, x, y, w = 120, r = 0, z = 0, hint, zoom
       >
         {hint}
       </div>}
+      </div>
     </div>
   );
 }

@@ -35,13 +35,15 @@ export default function Tabs({ active, onSelect, dark, footerRef }) {
 
   return (
     <nav className="fixed left-0 z-50 select-none" style={{ top: 112 - shift, width: 52 }}>
-      {TABS.map((t) => {
+      {TABS.map((t, i) => {
         const isActive = t.id === active;
         return (
           <button
             key={t.id}
             onClick={() => onSelect(t.id)}
+            className="intro-tab"
             style={{
+              '--d': `${200 + i * 80}ms`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               height: 116, width: isActive ? 49 : 42,
               background: isActive ? t.on : dark ? t.dark : t.off,
