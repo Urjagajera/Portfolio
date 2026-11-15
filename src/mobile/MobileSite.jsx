@@ -12,6 +12,7 @@ import Doodle from '../components/Doodle';
 import { BrandIcon } from '../components/BrandIcons';
 import { useContactForm, honeypotProps } from '../lib/contactForm';
 import { INTRO } from '../lib/intro';
+import ImpactPills from '../components/ImpactPills';
 import './mobile.css';
 
 // The phone / small-tablet layout (< 900px wide). Same content as the desktop "desk" site, read from the same
@@ -81,6 +82,7 @@ const SectionHead = ({ kicker, title, color }) => (
 /* ---------------------------------------------------------------- hero */
 
 const P1 = 'I don’t just believe in words.'.split(' ');
+const TAG_COLORS = ['#4040c4', '#27b31c', '#b4144f']; // project colours from the What I do cards
 
 function Hero({ onQuick }) {
   const [shown, setShown] = useState(0);
@@ -102,7 +104,9 @@ function Hero({ onQuick }) {
       </h1>
       <p className="m-tagline">
         {['Build', '·', 'Create', '·', 'Explore'].map((w, i) => (
-          <span key={i} className="intro-word" style={{ '--d': `${520 + i * 70}ms`, margin: '0 .18em' }}>{w}</span>
+          <span key={i} className="intro-word" style={{ '--d': `${520 + i * 70}ms`, margin: '0 .18em' }}>
+            {w === '·' ? w : <span className="tag-word" style={{ display: 'inline-block', '--hc': TAG_COLORS[i / 2] }}>{w}</span>}
+          </span>
         ))}
       </p>
       <p className="m-headline intro-fade" style={{ '--d': '780ms' }}>{R.HEADLINE}</p>
@@ -110,12 +114,10 @@ function Hero({ onQuick }) {
         <button type="button" className="m-open" onClick={() => go('contact')}><i className="visitor-dot" aria-hidden="true" />{R.AVAILABILITY} &rarr;</button>
         <VisitorCount />
       </div>
-      <ul className="m-pills" aria-label="Highlights">
-        {R.IMPACT.map(([v, , s], i) => <li key={s} className="impact-pill" style={{ '--d': `${960 + i * 80}ms` }}><b>{v}</b>{s}</li>)}
-      </ul>
+      <ImpactPills className="m-pills" base={700} spread={800} fall={-460} />
       <p className="m-motto intro-fade" style={{ '--d': '1250ms' }}>
         {P1.map((w, i) => <span key={i} style={{ color: i < shown ? '#161616' : '#c9c9cf', transition: 'color .35s' }}>{w} </span>)}
-        <br />I believe in words that are <span className="m-hl">followed by action</span>.
+        <br />I believe in words that are <span className="hl-sweep">followed by action</span>.
       </p>
       <div className="m-cta intro-fade" style={{ '--d': '1350ms' }}>
         <button type="button" className="m-btn m-btn-dark" onClick={onQuick}>&#9201; 60-second view</button>

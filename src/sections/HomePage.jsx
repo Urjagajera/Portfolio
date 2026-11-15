@@ -5,7 +5,8 @@ import ProgramsPage from './ProgramsPage';
 import Doodle from '../components/Doodle';
 import AboutPage from './AboutPage';
 import { asset, clamp, easeInOut, useDesign } from '../lib/design';
-import { IMPACT, AVAILABILITY } from '../data/resume';
+import { AVAILABILITY } from '../data/resume';
+import ImpactPills from '../components/ImpactPills';
 import { useContactForm, honeypotProps } from '../lib/contactForm';
 import QuickView from '../components/QuickView';
 import { INTRO } from '../lib/intro';
@@ -24,7 +25,7 @@ export const COMPUTER_H = SCENE_H + ZIN + HOLD + ZOUT;
 /* ---------------------------------------------------------------- hero */
 
 const P1 = 'I don’t just believe in words.'.split(' ');
-const MOTTO_HL = { background: 'linear-gradient(transparent 62%, rgba(150,110,230,.45) 62%)' };
+const TAG_COLORS = ['#4040c4', '#27b31c', '#b4144f']; // project colours from the What I do cards
 
 function Hero({ onGo }) {
   const [shown, setShown] = useState(0);
@@ -87,22 +88,20 @@ function Hero({ onGo }) {
 
       <div className="absolute w-full text-center uppercase flex justify-center items-center" style={{ top: 518, fontSize: 22, gap: 20 }}>
         {['Build', '·', 'Create', '·', 'Explore'].map((w, i) => (
-          <span key={i} className="intro-word" style={{ '--d': `${560 + i * 75}ms` }}>{w}</span>
+          <span key={i} className="intro-word" style={{ '--d': `${560 + i * 75}ms` }}>
+            {w === '·' ? w : <span className="tag-word" style={{ display: 'inline-block', '--hc': TAG_COLORS[i / 2] }}>{w}</span>}
+          </span>
         ))}
       </div>
       {/* impact strip: the proof points a recruiter should see first */}
-      <ul className="absolute flex justify-center list-none m-0 p-0" style={{ left: 260, right: 260, top: 574, gap: 12 }} aria-label="Highlights">
-        {IMPACT.map(([v, l, s], i) => (
-          <li key={l} className="impact-pill" style={{ '--d': `${880 + i * 90}ms` }}><b>{v}</b>{s || l}</li>
-        ))}
-      </ul>
+      <ImpactPills className="absolute flex justify-center list-none m-0 p-0" style={{ left: 260, right: 260, top: 574, gap: 12 }} base={650} spread={800} fall={-680} />
       <p className="absolute m-0 intro-fade" style={{ left: 515, top: 668, width: 440, fontSize: 25, lineHeight: '33px', '--d': '1050ms' }}>
         {P1.map((w, i) => (
           <span key={i} style={{ color: i < shown ? '#161616' : '#d2d2d6', transition: 'color .35s' }}>{w} </span>
         ))}
       </p>
       <p className="absolute m-0 intro-fade" style={{ left: 515, top: 712, width: 440, fontSize: 25, lineHeight: '33px', color: `rgb(${grey},${grey},${grey + 4})`, '--d': '1150ms' }}>
-        I believe in words that are <span style={MOTTO_HL}>followed by action</span>.
+        I believe in words that are <span className="hl-sweep">followed by action</span>.
       </p>
       <img src={asset('gummy_yellow.png')} alt="" draggable={false} className="absolute pointer-events-none intro-pop" style={{ left: 1322, top: 700, width: 75, '--d': '1500ms' }} />
       <Doodle n="compass" x={160} y={120} w={120} r={-8} intro={700} />

@@ -71,17 +71,10 @@ a { color: inherit; }
 
 /* ---------------------------------------------------------------- opening sequence */
 /* Everything here animates only transform + opacity (compositor-only), so it stays smooth while the page loads.
-   Delays are offset by --intro (set in src/lib/intro.js): longer when the curtain plays, near zero otherwise.
+   Delays are offset by --intro (set in src/lib/intro.js).
    fill-mode "backwards" holds the start pose during the delay, then hands control back to the element's own
    styles, so draggable stickers and hover effects keep working afterwards. */
 
-.intro-curtain { position: fixed; inset: 0; z-index: 2000; display: flex; pointer-events: none; }
-.intro-curtain i { flex: 1; height: 100%; transform-origin: top; animation: introStripe .62s cubic-bezier(.7,0,.25,1) both; }
-@keyframes introStripe { from { transform: translateY(0) } to { transform: translateY(-101%) } }
-.intro-stamp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 10px; animation: introStamp .3s ease .42s both; }
-.intro-stamp b { display: grid; place-items: center; width: 74px; height: 74px; border: 3px solid #141414; border-radius: 20px; background: #fafaf8; box-shadow: 5px 5px 0 #141414; font-family: Georgia, 'Times New Roman', serif; font-size: 30px; color: #141414; }
-.intro-stamp span { font-family: 'Courier Prime', monospace; font-weight: 700; font-size: 14px; letter-spacing: .08em; color: #141414; }
-@keyframes introStamp { from { opacity: 1 } to { opacity: 0 } }
 
 @keyframes introRise { from { opacity: 0; transform: translateY(34px) scale(.97) } to { opacity: 1; transform: none } }
 @keyframes introDrop { from { opacity: 0; transform: translateY(-22px) } to { opacity: 1; transform: none } }
@@ -98,19 +91,44 @@ a { color: inherit; }
 .intro-tab { animation: introTab .55s cubic-bezier(.2,.9,.3,1.15) backwards; animation-delay: calc(var(--intro, 0ms) + var(--d, 0ms)); }
 
 /* the impact pills already rise in; start them after the name */
-.impact-pill { animation-delay: calc(var(--intro, 0ms) + var(--d, 900ms)) !important; }
 
-.intro-off .intro-curtain { display: none; }
 @media (prefers-reduced-motion: reduce) {
-  .intro-curtain { display: none; }
   .intro-rise, .intro-drop, .intro-word, .intro-fade, .intro-pop, .intro-tab { animation: none !important; }
 }
 
 /* ---------------------------------------------------------------- recruiter extras */
 
 /* hero impact strip: pills rise in one after another */
-@keyframes riseIn { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
-.impact-pill { display: inline-flex; align-items: baseline; gap: 8px; padding: 7px 17px; border: 1.5px solid #141414; border-radius: 999px; background: #fff; font-size: 17px; white-space: nowrap; box-shadow: 3px 3px 0 #141414; animation: riseIn .6s cubic-bezier(.2,.9,.3,1) both; }
+/* impact pills: each one free-falls from its own random point above the screen at a random moment, bounces
+   twice and settles with a slight tilt, like stickers dropped on the desk (values set per pill in ImpactPills.jsx).
+   fill-mode backwards: the resting tilt comes from the normal style, so hover can straighten it afterwards. */
+.impact-pill { display: inline-flex; align-items: baseline; gap: 8px; padding: 7px 17px; border: 1.5px solid #141414; border-radius: 999px; background: #fff; font-size: 17px; white-space: nowrap; box-shadow: 3px 3px 0 #141414; cursor: default; user-select: none;
+  transform: rotate(var(--tilt, 0deg)); transition: transform .28s cubic-bezier(.2,.9,.3,1.35), background-color .25s ease, box-shadow .25s ease;
+  animation: pillDrop 1.25s backwards; animation-delay: calc(var(--intro, 0ms) + var(--d, 0ms)); }
+.impact-pill:hover { background: var(--hc, #fdeb7a); transform: translateY(-5px) rotate(0deg) scale(1.05); box-shadow: 5px 7px 0 #141414; }
+.impact-pill.boing { animation: pillBoing .5s cubic-bezier(.2,.9,.3,1) !important; }
+@keyframes pillDrop {
+  0%   { opacity: 0; transform: translate(var(--fx, 0px), var(--fall, -650px)) rotate(var(--fr, 20deg)); animation-timing-function: cubic-bezier(.5,0,1,.6); }
+  6%   { opacity: 1; }
+  52%  { transform: translate(0, 0) rotate(calc(var(--tilt, 0deg) * -2)); animation-timing-function: cubic-bezier(0,.5,.5,1); }
+  68%  { transform: translate(0, -30px) rotate(calc(var(--tilt, 0deg) * 1.6)); animation-timing-function: cubic-bezier(.5,0,1,.6); }
+  80%  { transform: translate(0, 0) rotate(calc(var(--tilt, 0deg) * .5)); animation-timing-function: cubic-bezier(0,.5,.5,1); }
+  90%  { transform: translate(0, -8px) rotate(var(--tilt, 0deg)); animation-timing-function: cubic-bezier(.5,0,1,.6); }
+  100% { opacity: 1; transform: translate(0, 0) rotate(var(--tilt, 0deg)); }
+}
+@keyframes pillBoing {
+  0% { transform: translateY(-5px) scale(1.05) } 30% { transform: translateY(2px) scale(.92, 1.08) rotate(-4deg) }
+  60% { transform: translateY(-7px) scale(1.08, .95) rotate(3deg) } 100% { transform: translateY(-5px) scale(1.05) }
+}
+
+/* highlighter stroke sweeps across "followed by action" once the motto has typed itself */
+.hl-sweep { background-image: linear-gradient(rgba(150,110,230,.45), rgba(150,110,230,.45)); background-repeat: no-repeat; background-position: 0 92%; background-size: 100% 40%;
+  animation: hlSweep .75s cubic-bezier(.6,0,.2,1) backwards; animation-delay: calc(var(--intro, 0ms) + 2300ms); }
+@keyframes hlSweep { from { background-size: 0% 40% } }
+
+/* Build · Create · Explore: each word hops and takes a project colour under the pointer */
+.tag-word { cursor: default; transition: color .2s ease, transform .3s cubic-bezier(.2,.9,.3,1.6); }
+.tag-word:hover { color: var(--hc); transform: translateY(-5px) rotate(-4deg); }
 .impact-pill b { font-family: Syne, 'Hanken Grotesk', sans-serif; font-weight: 800; font-size: 19px; }
 
 /* top-right hero buttons */
@@ -166,7 +184,8 @@ a { color: inherit; }
   .qv-projects, .qv-two { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .impact-pill, .qv-panel, .qv-backdrop { animation: none; }
+  .impact-pill, .qv-panel, .qv-backdrop, .hl-sweep { animation: none !important; }
+  .impact-pill { transform: none; }
 }
 
 /* contact link buttons */

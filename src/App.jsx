@@ -4,7 +4,6 @@ import Tabs from './components/Tabs';
 import Footer from './components/Footer';
 import HomePage from './sections/HomePage';
 import ProjectPage from './sections/ProjectPage';
-import IntroCurtain from './components/IntroCurtain';
 
 function Shell() {
   const { z, vh } = useDesign();
@@ -161,7 +160,6 @@ export default function App() {
           <Shell />
         </DesignProvider>
       )}
-      <IntroCurtain />
     </>
   );
 }
