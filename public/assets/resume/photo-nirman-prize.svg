@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c39bf8"/><stop offset="1" stop-color="#7a5bd1"/></linearGradient>
+<filter id="s"><feGaussianBlur stdDeviation="30"/></filter></defs>
+<rect width="1600" height="1000" fill="url(#g)"/>
+<g filter="url(#s)" opacity=".55"><circle cx="300" cy="260" r="160" fill="#fff"/><circle cx="1300" cy="720" r="220" fill="#fff"/><circle cx="1150" cy="220" r="90" fill="#fff"/></g>
+<g transform="translate(800 470)" fill="none" stroke="#fff" stroke-width="16" stroke-linejoin="round">
+<rect x="-170" y="-110" width="340" height="230" rx="34"/><path d="M-80 -110 l26 -44 h108 l26 44"/><circle cx="0" cy="8" r="68"/></g>
+<g transform="translate(1204 92)"><rect width="360" height="54" rx="10" fill="#fde97a" stroke="#c99a1a" stroke-width="3" stroke-dasharray="10 7"/><text x="180.0" y="36" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="24" font-weight="700" fill="#5a4300" letter-spacing="2">SAMPLE PHOTO</text></g><g transform="translate(36 908)"><rect width="524.0" height="58" rx="29" fill="#111" opacity=".85"/><text x="262.0" y="39" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="28" fill="#fff">CHAOS2COMMIT 2026: 2nd prize</text></g>
+</svg>

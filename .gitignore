@@ -1,0 +1,17 @@
+# dependencies and build output (Vercel installs and builds from source)
+node_modules/
+dist/
+
+# local editor / tool settings
+.vscode/
+.claude/
+
+# logs and OS junk
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# env files, never commit secrets
+.env
+.env.*
