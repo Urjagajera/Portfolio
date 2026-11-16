@@ -116,6 +116,7 @@ export const PROJECTS = [
     metrics: [['9', 'dashboard modules'], ['10', 'table database'], ['2', 'AI modes with memory'], ['365', 'day habit tracker']],
     tech: 'Next.js 16, React 19, TypeScript, Tailwind CSS, Supabase (PostgreSQL), NextAuth, Groq SDK',
     repo: 'https://github.com/Urjagajera/Strux',
+    diagram: { src: '/assets/resume/strux-how-it-works.jpg', caption: 'How Strux works', whole: true },
   },
   {
     name: 'NutriFit',
@@ -134,6 +135,12 @@ export const PROJECTS = [
     shots: [png('nutrifit-1', 'NutriFit landing page'), png('nutrifit-2', 'User dashboard — cockpit'), png('nutrifit-3', 'Admin panel — tracking & plans')],
     tech: 'Python, Flask, MySQL, SQLAlchemy, Flask-WTF, Chart.js, HTML, CSS',
     repo: 'https://github.com/Urjagajera/NutriFit',
+    // recorded on a local copy with made-up members (no real user data)
+    videos: [
+      { label: 'Member side', src: '/assets/resume/nutrifit-user-demo.mp4', poster: '/assets/resume/nutrifit-user-demo-poster.jpg', caption: 'Sign up, health quiz, personal dashboard and progress charts', controls: true },
+      { label: 'Admin side', src: '/assets/resume/nutrifit-admin-demo.mp4', poster: '/assets/resume/nutrifit-admin-demo-poster.jpg', caption: 'Member list, a member’s progress, assigning a diet plan and workout', controls: true },
+    ],
+    diagram: { src: '/assets/resume/nutrifit-how-it-works.jpg', caption: 'How NutriFit works', whole: true },
   },
   {
     name: 'Smart Expense Analyzer',
@@ -142,12 +149,13 @@ export const PROJECTS = [
     meta: 'Individual | Completed',
     points: [
       'Built a Python tool that reads CSV bank/expense statements and analyzes spending automatically, without manual data entry.',
-      'Used Pandas to group and analyze transactions across 4 expense categories.',
+      'Grouped and totalled transactions across 4 expense categories using Python’s csv module.',
       'Generated pie chart visualizations with Matplotlib to make spending patterns easy to read at a glance.',
       "Added exportable reports so the analysis isn't locked inside the script.",
     ],
     shots: [png('expense-1', 'Expense distribution by category')],
-    tech: 'Python, Pandas, Matplotlib',
+    tech: 'Python, csv module, Matplotlib',
+    diagram: { src: '/assets/resume/expense-how-it-works.jpg', caption: 'How Smart Expense Analyzer works', whole: true },
     repo: 'https://github.com/Urjagajera/Smart-Expense-Analyzer',
   },
 ];

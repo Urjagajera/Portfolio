@@ -81,7 +81,7 @@ export const PROGRAMS = [
       [['On the analysis side, I use Python with Pandas and Matplotlib, Chart.js in web apps, and Power BI.']],
     ],
     goals: ['Clarity at a glance', 'Live data', 'Right view per role', 'Exportable reports'],
-    features: ['Role-based dashboards in React 19 and Tailwind CSS', 'Frontend wired to REST APIs and Socket.IO updates', 'Chart.js visualizations: NutriFit water and weight tracking', 'Pandas analysis with Matplotlib pie charts and exportable reports'],
+    features: ['Role-based dashboards in React 19 and Tailwind CSS', 'Frontend wired to REST APIs and Socket.IO updates', 'Chart.js visualizations: NutriFit water and weight tracking', 'Python analysis with Matplotlib pie charts and exportable reports'],
     impact: ['Internship: dashboards for farmers, warehouse workers, operations managers and delivery partners', 'Smart Expense Analyzer: transactions grouped across 4 expense categories automatically', 'Strux: a 365-day habit tracker and weekly reports'],
     research: [['Where it shows: '], ['EGE Agritech dashboards, NutriFit charts and Smart Expense Analyzer', 1], ['.']],
   },

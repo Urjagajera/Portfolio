@@ -153,6 +153,16 @@ function Projects() {
           <div className="italic" style={{ fontSize: 19, marginBottom: 18 }}><T s={p.badge} /> | <T s={p.meta} /></div>
           <Links live={p.live} repo={p.repo} />
           {p.video && <LoopVideo {...p.video} style={{ margin: '6px 0 26px' }} />}
+          {p.videos && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 22, margin: '6px 0 26px' }}>
+              {p.videos.map((v) => (
+                <div key={v.src}>
+                  <Label style={{ margin: '0 0 8px' }}>{v.label}</Label>
+                  <LoopVideo {...v} />
+                </div>
+              ))}
+            </div>
+          )}
           {p.paras && p.paras.map((t) => <P key={t}><T s={t} /></P>)}
           {p.role && <P><b>My role:</b> <T s={p.role} /></P>}
           {p.points && <List items={p.points} />}

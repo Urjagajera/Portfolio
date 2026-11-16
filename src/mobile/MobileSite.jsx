@@ -179,6 +179,12 @@ function Projects({ open }) {
       <div className="m-muted m-italic">{clean(p.badge)} | {clean(p.meta)}</div>
       <Links repo={p.repo} live={p.live} />
       {p.video && <LoopVideo {...p.video} style={{ margin: '12px 0 4px' }} />}
+      {p.videos?.map((v) => (
+        <div key={v.src} style={{ marginTop: 12 }}>
+          <div className="m-label">{v.label}</div>
+          <LoopVideo {...v} style={{ marginTop: 6 }} />
+        </div>
+      ))}
       {p.paras?.map((t) => <p key={t.slice(0, 20)} className="m-p">{t}</p>)}
       {p.role && <p className="m-p"><b>My role:</b> {p.role}</p>}
       {p.points && <List items={p.points} />}
