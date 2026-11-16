@@ -115,6 +115,7 @@ export const PROJECTS = [
     ],
     metrics: [['4,722', 'government schemes'], ['36', 'states & UTs'], ['3', 'languages'], ['1,100+', 'automated tests']],
     diagram: { src: '/assets/resume/schemesetu-how-it-works.jpg', caption: 'How SchemeSetu works', whole: true },
+    video: { src: '/assets/resume/schemesetu-demo.mp4', poster: '/assets/resume/schemesetu-demo-poster.jpg', caption: 'Search, eligibility filters, scheme details and the Gujarati version', controls: true },
     tech: 'React 19, TypeScript, Vite, Tailwind CSS, Node.js, Express, PostgreSQL, Prisma, Groq, GitHub Actions',
     repo: 'https://github.com/Urjagajera/SchemeSetu',
     live: 'https://schemesetu-chi.vercel.app',
@@ -134,6 +135,8 @@ export const PROJECTS = [
     ],
     metrics: [['5', 'user roles'], ['1-tap', 'progress updates'], ['0', 'sign-up needed for clients']],
     diagram: { src: '/assets/resume/courtcall-how-it-works.jpg', caption: 'How CourtCall works', whole: true },
+    // recorded with the one-tap demo accounts (sample data only)
+    video: { src: '/assets/resume/courtcall-demo.mp4', poster: '/assets/resume/courtcall-demo-poster.jpg', caption: 'A junior reports progress; the client and the lawyer see it live', controls: true },
     tech: 'React, TypeScript, Vite, Tailwind CSS, Node.js, Express, Zod, PostgreSQL (Supabase), Drizzle ORM, Nexconn Chat SDK, Web Push',
     repo: 'https://github.com/Urjagajera/CourtCall',
     live: 'https://courtcall-kappa.vercel.app',
