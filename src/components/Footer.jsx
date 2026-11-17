@@ -41,7 +41,7 @@ const Footer = forwardRef(function Footer(_, ref) {
       <div className="absolute" style={{ left: 1800, top: 146, width: 90, height: 40, background: '#e6e6ea', borderRadius: '0 40px 0 0' }} />
       <div className="absolute" style={{ left: 42, top: 166, width: 1810, height: 44, background: '#ead98e' }} />
       {/* black flap */}
-      <div className="absolute grain overflow-hidden" style={{ left: 0, top: 208, width: 1890, height: 507, background: '#191919', borderRadius: '30px 30px 0 0' }}>
+      <div className="absolute grain overflow-hidden keep-dark" style={{ left: 0, top: 208, width: 1890, height: 507, background: '#191919', borderRadius: '30px 30px 0 0' }}>
         <div className="absolute font-mono font-bold text-white text-right" style={{ right: 96, top: 76, fontSize: 25, lineHeight: '39px' }}>
           Build<br />Create<br />Explore
         </div>

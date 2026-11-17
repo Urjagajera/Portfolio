@@ -4,6 +4,7 @@ import Tabs from './components/Tabs';
 import Footer from './components/Footer';
 import HomePage from './sections/HomePage';
 import ProjectPage from './sections/ProjectPage';
+import ThemeCord from './components/ThemeCord';
 
 function Shell() {
   const { z, vh } = useDesign();
@@ -151,6 +152,7 @@ export default function App() {
   const mobile = useIsMobile();
   return (
     <>
+      <ThemeCord className={mobile ? 'is-mobile' : ''} />
       {mobile ? (
         <Suspense fallback={null}>
           <MobileSite />

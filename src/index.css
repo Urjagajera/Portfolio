@@ -201,3 +201,74 @@ a { color: inherit; }
 .win-chip { position: absolute; left: 50%; bottom: 7%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 14px; padding: 12px 26px 12px 16px; border: 2px solid #fafaf8; border-radius: 14px; background: rgba(250,250,248,.08); color: #fafaf8; font-size: 22px; cursor: pointer; pointer-events: auto; animation: winChipIn .45s cubic-bezier(.2,.9,.3,1) .25s both; transition: background-color .2s ease; }
 .win-chip:hover { background: rgba(250,250,248,.18); }
 .win-chip em { font-style: normal; font-size: 15px; opacity: .6; }
+
+/* ===================== dark theme =====================
+   The page is drawn in its light colours and flipped as a whole: lightness inverts, hue stays (the
+   pastel tabs and cards turn into deep versions of themselves). Photos, videos and screenshots are
+   flipped back so they keep their real colours, a touch dimmer for night. Parts that are dark by design
+   (.keep-dark) are flipped back too, so they stay dark. */
+html[data-theme='dark'] { filter: invert(.93) hue-rotate(180deg); }
+html[data-theme='dark'] :is(img, video, picture, canvas, iframe) { filter: brightness(.88) invert(1) hue-rotate(180deg); } /* dim first: the page flip comes after */
+html[data-theme='dark'] .keep-dark { filter: invert(1) hue-rotate(180deg); }
+html[data-theme='dark'] .keep-dark :is(img, video, picture, canvas) { filter: none; }
+html[data-theme='dark'] .keep-dark-bg { background: #e4e4e1 !important; } /* plain dark backdrops: lightened, so the flip makes them dark again */
+html[data-theme='dark'] .resume-thumb:hover img { filter: brightness(.95) invert(1) hue-rotate(180deg); }
+html[data-theme='dark'] .theme-cord-bulb { filter: none; }
+
+/* ---- the switch: night spreads from the bulb like an ink blot; light pours back with a soft glow ---- */
+@property --vt-r { syntax: '<length>'; inherits: false; initial-value: 0px; }
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-new(root) { animation: vt-spread 1.05s cubic-bezier(.62, .02, .28, 1) both; }
+html[data-switching='dark']::view-transition-new(root) {
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><path d='M101 6c13 1 18 14 30 15 13 1 24-9 35 0 11 10 3 26 10 37 7 10 23 13 22 28-1 14-17 17-19 29-2 13 11 25 4 37-8 13-25 6-36 14-11 9-12 26-27 28-15 1-21-14-33-16-12-3-25 9-37 1-12-8-6-25-14-35-8-10-25-12-27-26-1-15 15-20 18-32 3-12-9-25-1-37 8-11 25-6 35-13C69 21 85 5 101 6z'/></svg>") no-repeat;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><path d='M101 6c13 1 18 14 30 15 13 1 24-9 35 0 11 10 3 26 10 37 7 10 23 13 22 28-1 14-17 17-19 29-2 13 11 25 4 37-8 13-25 6-36 14-11 9-12 26-27 28-15 1-21-14-33-16-12-3-25 9-37 1-12-8-6-25-14-35-8-10-25-12-27-26-1-15 15-20 18-32 3-12-9-25-1-37 8-11 25-6 35-13C69 21 85 5 101 6z'/></svg>") no-repeat;
+  -webkit-mask-size: calc(var(--vt-r) * 2) calc(var(--vt-r) * 2);
+          mask-size: calc(var(--vt-r) * 2) calc(var(--vt-r) * 2);
+  -webkit-mask-position: calc(var(--tx) - var(--vt-r)) calc(var(--ty) - var(--vt-r));
+          mask-position: calc(var(--tx) - var(--vt-r)) calc(var(--ty) - var(--vt-r));
+}
+html[data-switching='light']::view-transition-new(root) {
+  -webkit-mask: radial-gradient(circle at var(--tx) var(--ty), #000 calc(var(--vt-r) - 140px), rgba(0,0,0,.55) calc(var(--vt-r) - 60px), transparent var(--vt-r));
+          mask: radial-gradient(circle at var(--tx) var(--ty), #000 calc(var(--vt-r) - 140px), rgba(0,0,0,.55) calc(var(--vt-r) - 60px), transparent var(--vt-r));
+}
+@keyframes vt-spread { from { --vt-r: 0px } to { --vt-r: 175vmax } }
+
+/* ---- the lamp ---- */
+.theme-cord { position: fixed; top: 0; right: 12px; z-index: 70; pointer-events: none; }
+.theme-cord-hit { pointer-events: auto; display: block; background: none; border: 0; padding: 0 10px 8px; cursor: grab; touch-action: none; -webkit-tap-highlight-color: transparent; }
+.theme-cord-hit:active { cursor: grabbing; }
+.theme-cord-hit:focus-visible { outline: 2px dashed #c39bf8; outline-offset: 2px; border-radius: 10px; }
+.theme-cord-swing { display: flex; flex-direction: column; align-items: center; transform-origin: 50% 0; }
+.theme-cord-line { display: block; width: 2px; height: calc(var(--cord, 62px) + var(--drag, 0px)); background: #141414; border-radius: 2px; transition: height .12s ease-out; }
+.theme-cord-bulb { display: block; margin-top: -3px; overflow: visible; transition: transform .25s cubic-bezier(.2,.9,.3,1.4); }
+.theme-cord-hit:hover .theme-cord-bulb { transform: rotate(-6deg) scale(1.06); }
+.tc-glass { fill: #fafaf8; stroke: #141414; transition: fill .3s ease; }
+.tc-filament { stroke: #9a8f7a; transition: stroke .3s ease; }
+.tc-glow { fill: #ffd84d; opacity: 0; filter: blur(7px); transition: opacity .35s ease; }
+.is-on .tc-glass { fill: #ffe57a; }
+.is-on .tc-filament { stroke: #c2410c; }
+.is-on .tc-glow { opacity: .75; animation: tcFlicker 4s ease-in-out infinite; }
+@keyframes tcFlicker { 0%, 100% { opacity: .72 } 48% { opacity: .82 } 50% { opacity: .55 } 53% { opacity: .8 } }
+/* one tug: the cord stretches and snaps back, the bulb swings and settles */
+.is-tugged .theme-cord-line { animation: tcStretch .55s cubic-bezier(.3, 1.7, .45, 1); }
+.is-tugged { animation: tcSwing 1.3s cubic-bezier(.3, .6, .3, 1); }
+@keyframes tcStretch { 0% { height: var(--cord, 62px) } 32% { height: calc(var(--cord, 62px) + 38px) } 100% { height: var(--cord, 62px) } }
+@keyframes tcSwing { 0% { transform: rotate(0) } 28% { transform: rotate(9deg) } 48% { transform: rotate(-6deg) } 66% { transform: rotate(3.5deg) } 82% { transform: rotate(-1.5deg) } 100% { transform: rotate(0) } }
+.theme-cord-hint { position: absolute; right: 54px; top: 64px; font-family: 'Reenie Beanie', 'Gaegu', cursive; font-size: 22px; color: #555; white-space: nowrap; transform: rotate(-8deg); pointer-events: none; animation: fadeIn .6s ease 1.2s both; }
+@media (prefers-reduced-motion: reduce) {
+  .is-tugged, .is-tugged .theme-cord-line, .is-on .tc-glow { animation: none; }
+}
+/* phones: a smaller lamp on a short cord, just left of the "60-sec view" button in the top bar */
+.theme-cord.is-mobile { right: 142px; --cord: 6px; }
+.theme-cord.is-mobile .theme-cord-hit { padding: 0 6px 4px; }
+.theme-cord.is-mobile .theme-cord-bulb { width: 28px; height: 41px; }
+.theme-cord.is-mobile .theme-cord-hint { right: 40px; top: 22px; font-size: 19px; }
+/* images that are really "ink" (the URJA GAJERA title) flip with the page instead of keeping their colours */
+html[data-theme='dark'] img[src*='wordmark'] { filter: none; }
+/* the study desk at night: the same room with the lights down */
+html[data-theme='dark'] :is(img[src*='desk_scene'], img[src*='browse_scene']) { filter: brightness(.6) saturate(.85) invert(1) hue-rotate(180deg); }
+.theme-cord-hint { animation: fadeIn .6s ease 1.2s both, hintOut .8s ease 9s forwards; }
+@keyframes hintOut { to { opacity: 0; visibility: hidden } }
+.theme-cord.is-mobile .theme-cord-hint { display: none; }
+/* popup backdrops: a light veil that the page flip turns into a dark one */
+html[data-theme='dark'] :is(.qv-backdrop, .m-sheet-bg, .dark-scrim) { background: rgba(236, 236, 232, .68) !important; }

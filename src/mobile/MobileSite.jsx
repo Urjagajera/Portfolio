@@ -471,7 +471,7 @@ function Contact() {
 
 function Footer() {
   return (
-    <footer className="m-footer grain">
+    <footer className="m-footer grain keep-dark">
       <div className="m-footer-words">Build<br />Create<br />Explore</div>
       <ContactLinks dark />
       <div className="m-footer-copy">All rights reserved | Urja Gajera 2026</div>

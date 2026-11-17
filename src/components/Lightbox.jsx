@@ -33,7 +33,7 @@ export default function Lightbox({ list, i, onClose, onGo, host }) {
     <div
       ref={root}
       onClick={onClose}
-      className="fade-in"
+      className="fade-in keep-dark"
       style={{
         position: host ? 'absolute' : 'fixed', inset: 0, zIndex: 50, pointerEvents: 'auto',
         background: 'rgba(15,15,15,.86)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14,

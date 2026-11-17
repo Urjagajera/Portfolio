@@ -309,7 +309,7 @@ export default function CertCanvas({ onBack }) {
 
       {/* detail sheet */}
       {cur && (
-        <div data-ui onClick={() => setOpen(null)} className="cert-fade" style={{ position: 'absolute', inset: 0, background: 'rgba(20,20,20,.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'default', padding: 24 }}>
+        <div data-ui onClick={() => setOpen(null)} className="cert-fade dark-scrim" style={{ position: 'absolute', inset: 0, background: 'rgba(20,20,20,.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'default', padding: 24 }}>
           <div onClick={(e) => e.stopPropagation()} className="cert-pop" style={{ background: '#fff', border: '1px solid #222', maxWidth: 700, width: '100%', maxHeight: '100%', display: 'flex', overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,.45)' }}>
             <div style={{ flex: '0 0 46%', background: '#eceae3', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 14, overflow: 'auto' }}>
               <img src={cur.src} alt={cur.title} draggable={false} style={{ width: '100%', maxHeight: '100%', objectFit: 'contain', border: '1px solid #222', background: '#fff' }} />

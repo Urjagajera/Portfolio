@@ -199,7 +199,7 @@ export default function ProjectPage({ id, onBack, onServices, onContact }) {
   useEffect(() => { window.scrollTo(0, 0); }, [id]);
   const nav = { onBack, onServices, onContact };
   return (
-    <div className="relative" style={{ background: '#232323', minHeight: '100vh', paddingTop: 79, paddingBottom: 90 }}>
+    <div className="relative keep-dark-bg" style={{ background: '#232323', minHeight: '100vh', paddingTop: 79, paddingBottom: 90 }}>
       <div className="relative grain fade-in" style={{ width: 1341, marginLeft: 274, background: '#fafaf8', borderRadius: 6, padding: `0 ${pad}px 80px`, minHeight: 800 }}>
         <div className="absolute flex items-center justify-between" style={{ left: 9, right: 10, top: 13, height: 31 }}>
           <div style={{ flex: 1, height: '100%', background: bar, marginRight: 20 }} />

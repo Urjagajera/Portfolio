@@ -282,7 +282,7 @@ function Computer({ on, setOn, onOpenProject, onMode }) {
       {/* layer 2: black screen + portfolio window, viewport sized */}
       <div className="absolute left-0 top-0 w-full" style={{ height: '100%', pointerEvents: 'none' }}>
         <div className="sticky top-0" style={{ height: vh, width: 1890 }}>
-          <div className="absolute inset-0" style={{ background: noteOpen ? '#000' : '#141414', opacity: dark, transition: 'background .6s' }} />
+          <div className="absolute inset-0 keep-dark" style={{ background: noteOpen ? '#000' : '#141414', opacity: dark, transition: 'background .6s' }} />
           <div
             className="absolute inset-0 flex items-center justify-center"
             style={{ opacity: winOpacity, visibility: winOpacity > 0 ? 'visible' : 'hidden', pointerEvents: winOpacity > 0.5 ? 'auto' : 'none' }}
