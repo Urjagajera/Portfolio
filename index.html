@@ -8,12 +8,12 @@
   <meta name="description" content="Portfolio of Urja Gajera, B.Tech CSE at CHARUSAT: full-stack and AI developer. React & Node intern at MCT IT, 2nd prize at CHAOS2COMMIT 2026, 1300+ CodeChef problems, IEEE Student Branch Secretary. Open to internships." />
   <meta name="author" content="Urja Gajera" />
   <meta name="theme-color" content="#fafaf8" />
-  <!-- theme before first paint: the saved choice, otherwise the device setting -->
+  <!-- theme before first paint: light, unless the visitor chose dark last time -->
   <script>
     (function () {
       var t = null;
       try { t = localStorage.getItem('theme'); } catch (e) {}
-      if (t !== 'dark' && t !== 'light') t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      if (t !== 'dark') t = 'light'; // light unless the visitor pulled the lamp before
       document.documentElement.dataset.theme = t;
       if (t === 'dark') document.querySelector('meta[name="theme-color"]').content = '#171716';
     })();
@@ -47,6 +47,15 @@
 </head>
 
 <body>
+  <!-- dark theme: turns the light paper background of collage photos see-through (fully clear above ~90% lightness) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <filter id="knock-white" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
+      <!-- judge "background" on a slightly blurred copy, so paper grain doesn't turn into static -->
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="soft" />
+      <feColorMatrix in="soft" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -3.4 -3.4 -3.4 0 9.2" result="mask" />
+      <feComposite in="SourceGraphic" in2="mask" operator="in" />
+    </filter>
+  </svg>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>

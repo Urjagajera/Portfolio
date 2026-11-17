@@ -1,5 +1,5 @@
-// Light / dark theme. The choice lives on <html data-theme>, is remembered in localStorage, and on a
-// first visit follows the device setting. index.html applies it before the first paint (no white flash).
+// Light / dark theme. Light by default; a visitor's choice lives on <html data-theme> and is remembered
+// in localStorage. index.html applies it before the first paint (no flash).
 
 const KEY = 'theme';
 
@@ -27,6 +27,12 @@ export function toggleTheme(x, y) {
   if (!document.startViewTransition || reduce) { apply(next); return next; }
   root.style.setProperty('--tx', `${Math.round(x)}px`);
   root.style.setProperty('--ty', `${Math.round(y)}px`);
+  // four more drops land at random spots (a different pattern every time) and spread into each other
+  const W = innerWidth, H = innerHeight;
+  for (let i = 1; i <= 4; i++) {
+    root.style.setProperty(`--x${i}`, `${Math.round(W * (0.1 + Math.random() * 0.75))}px`);
+    root.style.setProperty(`--y${i}`, `${Math.round(H * (0.15 + Math.random() * 0.75))}px`);
+  }
   root.dataset.switching = next; // picks the ink-blot or the light-pour mask in CSS
   const t = document.startViewTransition(() => apply(next));
   t.finished.finally(() => { delete root.dataset.switching; });

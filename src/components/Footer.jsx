@@ -79,7 +79,7 @@ const Footer = forwardRef(function Footer(_, ref) {
         </div>
       </div>
       {/* folder tab */}
-      <div className="absolute grain overflow-hidden flex items-center justify-center text-white font-mono" style={{ left: 85, top: 142, width: 323, height: 68, background: '#191919', borderRadius: '30px 30px 0 0', fontSize: 27 }} />
+      <div className="absolute grain overflow-hidden flex items-center justify-center text-white font-mono keep-dark" style={{ left: 85, top: 142, width: 323, height: 68, background: '#191919', borderRadius: '30px 30px 0 0', fontSize: 27 }} />
     </footer>
   );
 });
