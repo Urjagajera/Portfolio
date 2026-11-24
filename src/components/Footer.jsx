@@ -46,6 +46,9 @@ const Footer = forwardRef(function Footer(_, ref) {
           Build<br />Create<br />Explore
         </div>
         <div className="absolute font-mono text-white" style={{ left: 94, bottom: 62 }}>
+          <button type="button" className="term-open" onClick={() => window.dispatchEvent(new Event('open-terminal'))}>
+            <b>&gt;_</b> psst... press <kbd>`</kbd> anywhere to open my terminal
+          </button>
           <div style={{ fontSize: 24, lineHeight: '30px' }}>
             All rights reserved | Urja Gajera 2026
           </div>

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import Header from '../components/Header';
 import Portfolio from '../components/Portfolio';
+import LivingDesk from '../components/LivingDesk';
 import ProgramsPage from './ProgramsPage';
 import Doodle from '../components/Doodle';
 import AboutPage from './AboutPage';
@@ -262,6 +263,7 @@ function Computer({ on, setOn, onOpenProject, onMode }) {
         <div className="absolute inset-0" style={{ transform: `scale(${scale})`, transformOrigin: `${ORIGIN[0]}px ${ORIGIN[1]}px`, willChange: 'transform' }}>
           <DeskBackdrop opacity={Math.max(1 - clamp((p - 0.12) / 0.45), clamp((q - 0.2) / 0.6))} />
           <img src={asset('browse_scene.png')} alt="Browse — vintage computer" decoding="async" draggable={false} style={{ position: 'relative', width: 1890, height: SCENE_H, display: 'block' }} />
+          <LivingDesk active={p < 0.03 || q > 0.97} />
           <div className="absolute left-0 w-full pointer-events-none" style={{ top: 700, height: SCENE_H - 700, background: 'linear-gradient(rgba(250,250,248,0), #fafaf8 70%)', opacity: clamp(q * 2.5) }} />
           {!on && reveal < 0.5 && (
             <button

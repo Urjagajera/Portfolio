@@ -474,6 +474,9 @@ function Footer() {
     <footer className="m-footer grain keep-dark">
       <div className="m-footer-words">Build<br />Create<br />Explore</div>
       <ContactLinks dark />
+      <button type="button" className="term-open m-term-open" onClick={() => window.dispatchEvent(new Event('open-terminal'))}>
+        <b>&gt;_</b> tap to open my terminal
+      </button>
       <div className="m-footer-copy">All rights reserved | Urja Gajera 2026</div>
       <div className="m-footer-credit">
         Desk oak photo: <a href="https://commons.wikimedia.org/wiki/File:Oak_Texture_-_5106733699_c1d5b0df29_b.jpg" target="_blank" rel="noreferrer" className="underline">William Warby</a>, CC BY 2.0 · shelf plant photo: <a href="https://commons.wikimedia.org/wiki/File:Aspidistra_01_(fcm).jpg" target="_blank" rel="noreferrer" className="underline">Frank C. Müller</a>, CC BY-SA 2.0
