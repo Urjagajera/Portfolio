@@ -37,9 +37,10 @@ function BugSquash({ onEnd }) {
     const spawn = () => {
       if (done.current) return;
       const elapsed = (performance.now() - t0.current) / 1000;
-      const speed = Math.max(1.6, 3.6 - elapsed * 0.07); // seconds to cross the line
+      // starts gentle (5 s to cross) and speeds up, but never past half the old top speed (3.2 s to cross)
+      const speed = Math.max(3.2, 5 - elapsed * 0.06);
       setBugs((b) => [...b, { id: ++id.current, row: Math.floor(Math.random() * CODE_LINES.length), dur: speed, y: rand(-0.15, 0.15) }]);
-      spawnT = setTimeout(spawn, Math.max(330, 900 - elapsed * 22));
+      spawnT = setTimeout(spawn, Math.max(660, 1300 - elapsed * 22)); // a new bug every 1.3 s at first, at most every 0.66 s
     };
     spawn();
     const tick = setInterval(() => {
@@ -269,11 +270,210 @@ function SpeedTyper({ onEnd }) {
   );
 }
 
+/* ------------------------------------------------------------------ Big-O Match */
+const BIGO_OPTS = ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)', 'O(n²)', 'O(2ⁿ)'];
+const BIGO = [
+  { code: 'function first(arr) {\n  return arr[0];\n}', a: 'O(1)', why: 'One step, no matter how big the array is.' },
+  { code: 'let sum = 0;\nfor (let i = 0; i < n; i++) {\n  sum += arr[i];\n}', a: 'O(n)', why: 'One pass over n items.' },
+  { code: 'for (let i = 0; i < n; i++)\n  for (let j = 0; j < n; j++)\n    grid[i][j] = 0;', a: 'O(n²)', why: 'A loop inside a loop: n × n steps.' },
+  { code: 'while (lo <= hi) {\n  const mid = (lo + hi) >> 1;\n  if (arr[mid] === x) return mid;\n  arr[mid] < x ? lo = mid + 1 : hi = mid - 1;\n}', a: 'O(log n)', why: 'Binary search: the range halves every step.' },
+  { code: 'for (let i = 1; i < n; i *= 2) {\n  steps++;\n}', a: 'O(log n)', why: 'i doubles each time, so it reaches n in log₂ n steps.' },
+  { code: 'const seen = new Map();\n// ...\nseen.get(key);', a: 'O(1)', why: 'A hash map lookup is constant time on average.' },
+  { code: 'for (const x of arr) total += x;\nfor (const x of arr) max = Math.max(max, x);', a: 'O(n)', why: 'Two loops one after the other: 2n, which is still O(n).' },
+  { code: 'for (let i = 0; i < n; i++)\n  for (let j = i + 1; j < n; j++)\n    if (arr[i] === arr[j]) dup = true;', a: 'O(n²)', why: 'Every pair is checked: about n²/2 steps, so O(n²).' },
+  { code: 'function mergeSort(a) {\n  if (a.length < 2) return a;\n  const m = a.length >> 1;\n  return merge(mergeSort(a.slice(0, m)), mergeSort(a.slice(m)));\n}', a: 'O(n log n)', why: 'log n levels of splitting, and n work to merge each level.' },
+  { code: 'arr.sort((a, b) => a - b);', a: 'O(n log n)', why: 'Built-in comparison sorts run in n log n.' },
+  { code: 'function fib(n) {\n  if (n < 2) return n;\n  return fib(n - 1) + fib(n - 2);\n}', a: 'O(2ⁿ)', why: 'Each call branches into two more calls.' },
+  { code: 'for (let i = 0; i < n; i++)\n  for (let k = 0; k < 10; k++)\n    work(i, k);', a: 'O(n)', why: 'The inner loop is a fixed 10 steps, so 10n is still O(n).' },
+];
+function BigOMatch({ onEnd }) {
+  const ROUNDS = 10;
+  const qs = useMemo(() => shuffle(BIGO).slice(0, ROUNDS), []);
+  const [i, setI] = useState(0);
+  const [pick, setPick] = useState(null);
+  const [score, setScore] = useState(0);
+  const q = qs[i];
+  const answer = (o) => { if (pick) return; setPick(o); if (o === q.a) setScore((s) => s + 1); };
+  const next = () => {
+    if (i + 1 >= ROUNDS) { onEnd({ correct: score }); return; }
+    setI(i + 1); setPick(null);
+  };
+  return (
+    <div>
+      <div className="gm-hud"><span>question <b>{i + 1}/{ROUNDS}</b></span><span>correct <b>{score}</b></span></div>
+      <pre className="gm-snip gm-snip-code">{q.code}</pre>
+      <div className="gm-opts">
+        {BIGO_OPTS.map((o) => (
+          <button key={o} type="button" onClick={() => answer(o)}
+            className={`gm-opt${pick ? (o === q.a ? ' is-right' : o === pick ? ' is-wrong' : '') : ''}`}>{o}</button>
+        ))}
+      </div>
+      {pick && (
+        <div className="gm-why">
+          <b>{pick === q.a ? 'Correct!' : `It's ${q.a}.`}</b> {q.why}
+          <button type="button" className="gm-go" onClick={next}>{i + 1 >= ROUNDS ? 'See score' : 'Next →'}</button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ Sort Race */
+// Each algorithm is recorded as a list of frames (array snapshot + the two indices being compared).
+function framesOf(kind, input) {
+  const a = [...input]; const f = [];
+  const snap = (x, y) => f.push({ a: [...a], x, y });
+  if (kind === 'Bubble') {
+    for (let i = 0; i < a.length; i++) for (let j = 0; j < a.length - 1 - i; j++) { snap(j, j + 1); if (a[j] > a[j + 1]) [a[j], a[j + 1]] = [a[j + 1], a[j]]; }
+  } else if (kind === 'Insertion') {
+    for (let i = 1; i < a.length; i++) { let j = i; while (j > 0) { snap(j - 1, j); if (a[j - 1] > a[j]) { [a[j - 1], a[j]] = [a[j], a[j - 1]]; j--; } else break; } }
+  } else if (kind === 'Merge') {
+    const tmp = [...a];
+    for (let w = 1; w < a.length; w *= 2) for (let lo = 0; lo < a.length - w; lo += 2 * w) {
+      const mid = lo + w, hi = Math.min(lo + 2 * w, a.length); let i = lo, j = mid, k = lo;
+      while (i < mid && j < hi) { snap(i, j); tmp[k++] = a[i] <= a[j] ? a[i++] : a[j++]; }
+      while (i < mid) tmp[k++] = a[i++]; while (j < hi) tmp[k++] = a[j++];
+      for (let t = lo; t < hi; t++) a[t] = tmp[t];
+    }
+  } else {
+    const qs = (lo, hi) => {
+      if (lo >= hi) return;
+      const p = a[hi]; let i = lo;
+      for (let j = lo; j < hi; j++) { snap(j, hi); if (a[j] < p) { [a[i], a[j]] = [a[j], a[i]]; i++; } }
+      [a[i], a[hi]] = [a[hi], a[i]];
+      qs(lo, i - 1); qs(i + 1, hi);
+    };
+    qs(0, a.length - 1);
+  }
+  f.push({ a: [...a], x: -1, y: -1 });
+  return f;
+}
+const SORTS = ['Bubble', 'Insertion', 'Merge', 'Quick'];
+function SortRace({ onEnd }) {
+  const input = useMemo(() => shuffle(Array.from({ length: 24 }, (_, i) => i + 1)), []);
+  const runs = useMemo(() => SORTS.map((k) => ({ k, frames: framesOf(k, input) })), [input]);
+  const winner = useMemo(() => runs.reduce((w, r) => (r.frames.length < w.frames.length ? r : w)).k, [runs]);
+  const [guess, setGuess] = useState(null);
+  const [step, setStep] = useState(0);
+  const total = Math.max(...runs.map((r) => r.frames.length));
+  useEffect(() => {
+    if (!guess) return undefined;
+    const id = setInterval(() => setStep((s) => { if (s + 1 >= total) { clearInterval(id); return s; } return s + 1; }), 28);
+    return () => clearInterval(id);
+  }, [guess, total]);
+  useEffect(() => {
+    if (guess && step >= total - 1) {
+      const t = setTimeout(() => onEnd({ correct: guess === winner, guess, winner, counts: runs.map((r) => [r.k, r.frames.length - 1]) }), 1600);
+      return () => clearTimeout(t);
+    }
+    return undefined;
+  }, [step, total, guess]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!guess) {
+    return (
+      <div className="gm-guess">
+        <p>Same 24 shuffled bars for everyone. <b>Which algorithm finishes first</b> (fewest comparisons)?</p>
+        <div className="gm-opts">{SORTS.map((k) => <button key={k} type="button" className="gm-opt" onClick={() => setGuess(k)}>{k} sort</button>)}</div>
+      </div>
+    );
+  }
+  return (
+    <div className="gm-race">
+      {runs.map((r) => {
+        const fi = Math.min(step, r.frames.length - 1); const fr = r.frames[fi]; const fin = fi === r.frames.length - 1;
+        return (
+          <div key={r.k} className={`gm-lane${fin ? ' is-done' : ''}${fin && r.k === winner ? ' is-win' : ''}`}>
+            <div className="gm-lane-h"><b>{r.k}{r.k === guess ? ' (your pick)' : ''}</b><span>{fi} comparisons{fin ? ' ✓' : ''}</span></div>
+            <div className="gm-bars">{fr.a.map((v, i) => <i key={i} className={i === fr.x || i === fr.y ? 'hl' : ''} style={{ height: `${(v / 24) * 100}%` }} />)}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ Maze Solver */
+const MC = 16, MR = 10, MSTART = 0, MGOAL = MC * MR - 1;
+const nbrs = (i) => { const r = Math.floor(i / MC), c = i % MC, o = []; if (r > 0) o.push(i - MC); if (c < MC - 1) o.push(i + 1); if (r < MR - 1) o.push(i + MC); if (c > 0) o.push(i - 1); return o; };
+function search(walls, kind) {
+  const prev = new Map([[MSTART, -1]]); const order = []; const list = [MSTART];
+  while (list.length) {
+    const cur = kind === 'bfs' ? list.shift() : list.pop();
+    order.push(cur);
+    if (cur === MGOAL) break;
+    for (const n of nbrs(cur)) if (!walls.has(n) && !prev.has(n)) { prev.set(n, cur); list.push(n); }
+  }
+  if (!prev.has(MGOAL)) return { order, path: null };
+  const path = []; for (let c = MGOAL; c !== -1; c = prev.get(c)) path.unshift(c);
+  return { order, path };
+}
+function MazeSolver({ onEnd }) {
+  const [walls, setWalls] = useState(() => new Set());
+  const [anim, setAnim] = useState(null); // { kind, order, path, k }
+  const [stats, setStats] = useState({});
+  const painting = useRef(null);
+  const busy = anim && anim.k < anim.order.length + (anim.path ? anim.path.length : 0);
+
+  const paint = (i, add) => {
+    if (i === MSTART || i === MGOAL || busy) return;
+    setAnim(null); setStats({}); // a changed maze needs a fresh run
+    setWalls((w) => { const n = new Set(w); if (add) n.add(i); else n.delete(i); return n; });
+  };
+  useEffect(() => { const up = () => { painting.current = null; }; window.addEventListener('pointerup', up); return () => window.removeEventListener('pointerup', up); }, []);
+  const run = (kind) => {
+    const r = search(walls, kind);
+    setAnim({ kind, ...r, k: 0 });
+    setStats((s) => ({ ...s, [kind]: { visited: r.order.length, len: r.path ? r.path.length - 1 : null } }));
+  };
+  useEffect(() => {
+    if (!busy) return undefined;
+    const id = setTimeout(() => setAnim((a) => ({ ...a, k: a.k + 2 })), 16);
+    return () => clearTimeout(id);
+  }, [anim, busy]);
+  const randomize = () => { setAnim(null); setStats({}); const w = new Set(); for (let i = 0; i < MC * MR; i++) if (i !== MSTART && i !== MGOAL && Math.random() < 0.3) w.add(i); setWalls(w); };
+
+  const visitedN = anim ? Math.min(anim.k, anim.order.length) : 0;
+  const visited = anim ? new Set(anim.order.slice(0, visitedN)) : new Set();
+  const pathN = anim && anim.path ? Math.max(0, anim.k - anim.order.length) : 0;
+  const path = anim && anim.path ? new Set(anim.path.slice(0, pathN)) : new Set();
+  const bfs = stats.bfs;
+
+  return (
+    <div className="gm-maze-wrap">
+      <div className="gm-hud">
+        <span>walls <b>{walls.size}</b></span>
+        {stats.bfs && <span>BFS: path <b>{stats.bfs.len ?? 'none'}</b>, visited {stats.bfs.visited}</span>}
+        {stats.dfs && <span>DFS: path <b>{stats.dfs.len ?? 'none'}</b>, visited {stats.dfs.visited}</span>}
+      </div>
+      <div className="gm-maze" style={{ gridTemplateColumns: `repeat(${MC}, 1fr)` }} onPointerLeave={() => { painting.current = null; }}>
+        {Array.from({ length: MC * MR }, (_, i) => {
+          const cls = i === MSTART ? 'st' : i === MGOAL ? 'go' : walls.has(i) ? 'w' : path.has(i) ? 'p' : visited.has(i) ? (anim.kind === 'bfs' ? 'vb' : 'vd') : '';
+          return (
+            <i key={i} className={cls}
+              onPointerDown={(e) => { e.preventDefault(); const add = !walls.has(i); painting.current = add; paint(i, add); }}
+              onPointerEnter={() => { if (painting.current !== null) paint(i, painting.current); }} />
+          );
+        })}
+      </div>
+      <div className="gm-row gm-maze-btns">
+        <button type="button" className="gm-back-btn" onClick={() => run('bfs')} disabled={busy}>Run BFS</button>
+        <button type="button" className="gm-back-btn" onClick={() => run('dfs')} disabled={busy}>Run DFS</button>
+        <button type="button" className="gm-back-btn" onClick={randomize} disabled={busy}>Random walls</button>
+        <button type="button" className="gm-back-btn" onClick={() => { setWalls(new Set()); setAnim(null); setStats({}); }} disabled={busy}>Clear</button>
+        <button type="button" className="gm-go" disabled={!bfs || bfs.len == null || busy} onClick={() => onEnd({ len: bfs.len, visited: bfs.visited, walls: walls.size })}>
+          Submit {bfs && bfs.len != null ? `(${bfs.len} steps)` : ''}
+        </button>
+      </div>
+      {bfs && bfs.len == null && <div className="gm-tiny gm-warn">No path from start to goal. Remove a wall and run BFS again.</div>}
+    </div>
+  );
+}
+
 /* ------------------------------------------------------------------ the folder */
 const GAMES = [
   {
     id: 'bugs', name: 'Bug Squash', color: '#f4717f', blurb: 'catch bugs before production',
-    rules: ['Bugs crawl along the lines of code toward production.', 'Click or tap a bug to squash it: +10, more with a combo.', 'Every bug that reaches production costs 5 points and breaks your combo.', 'You have 30 seconds, and they get faster.'],
+    rules: ['Bugs crawl along the lines of code toward production.', 'Click or tap a bug to squash it: +10, more with a combo.', 'Every bug that reaches production costs 5 points and breaks your combo.', 'You have 30 seconds. They start slow and speed up.'],
     Comp: BugSquash,
     result: (r) => ({ main: `${r.score} points`, sub: `${r.squashed} squashed · ${r.escaped} escaped`, key: r.score, better: (a, b) => a > b, fmt: (v) => `${v} points` }),
   },
@@ -294,6 +494,24 @@ const GAMES = [
     rules: ['A real code snippet appears (React, SQL, Python, git...).', 'Type it exactly. The timer starts on your first key.', 'Mistakes turn red; fix them with Backspace.', 'Your score is words per minute, plus accuracy.'],
     Comp: SpeedTyper,
     result: (r) => ({ main: `${r.wpm} WPM`, sub: `${r.acc}% accuracy`, key: r.wpm, better: (a, b) => a > b, fmt: (v) => `${v} WPM` }),
+  },
+  {
+    id: 'bigo', name: 'Big-O Match', color: '#9db8f6', blurb: 'how fast is this code?',
+    rules: ['A piece of code appears.', 'Pick its time complexity: how the work grows as n grows (O(1), O(log n), O(n)...).', 'After each answer you see why, so you learn as you play.', '10 questions. Score = correct answers.'],
+    Comp: BigOMatch,
+    result: (r) => ({ main: `${r.correct} / 10`, sub: r.correct >= 9 ? 'Algorithms whiz!' : r.correct >= 6 ? 'Solid. A bit more practice and you are there.' : 'Now you know a few more complexities!', key: r.correct, better: (a, b) => a > b, fmt: (v) => `${v} / 10` }),
+  },
+  {
+    id: 'sort', name: 'Sort Race', color: '#9de6c3', blurb: 'guess the fastest sort',
+    rules: ['Four sorting algorithms get the same 24 shuffled bars.', 'Before the race, guess which one finishes with the fewest comparisons.', 'Watch them race side by side; red bars are being compared.', 'A new shuffle every race, so the winner can change.'],
+    Comp: SortRace,
+    result: (r) => ({ main: r.correct ? 'You called it!' : `${r.winner} sort won`, sub: (r.counts || []).map(([k, n]) => `${k} ${n}`).join(' · ') + ' comparisons', key: r.correct ? 1 : 0, better: (a, b) => a > b, fmt: (v) => (v ? 'guessed a winner' : 'no correct guess yet') }),
+  },
+  {
+    id: 'maze', name: 'Maze Solver', color: '#f6b67a', blurb: 'BFS vs DFS path finding',
+    rules: ['Draw walls by clicking or dragging on the grid (click a wall to remove it).', 'Goal: make the SHORTEST path from start (green) to goal (red) as LONG as possible, without blocking it.', 'Run BFS to find the shortest path; run DFS to see how a depth-first search wanders instead.', 'Submit to score: your score is BFS’s path length.'],
+    Comp: MazeSolver,
+    result: (r) => ({ main: `${r.len} steps`, sub: `shortest path with ${r.walls} walls · BFS visited ${r.visited} cells`, key: r.len, better: (a, b) => a > b, fmt: (v) => `${v} steps` }),
   },
 ];
 

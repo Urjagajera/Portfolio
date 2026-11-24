@@ -77,3 +77,40 @@
 .gm-snip .bad { color: #fff; background: #e0533d; border-radius: 2px; }
 .gm-snip .cur { color: #fff; box-shadow: inset 0 -3px 0 #7be08a; animation: termBlink 1s steps(1) infinite; }
 .gm-type-in { position: absolute; opacity: 0; left: 0; top: 0; width: 1px; height: 1px; }
+
+/* big-o match */
+.gm-snip-code { color: #d8fbdc !important; font-size: .82em; white-space: pre; overflow-x: auto; word-break: normal; }
+.gm-opts { display: flex; flex-wrap: wrap; gap: .5em; margin-top: .8em; }
+.gm-opt { border: 2px solid #141414; background: #fff; border-radius: .5em; padding: .35em .8em; font-family: 'Courier Prime', monospace; font-weight: 700; box-shadow: .15em .15em 0 #141414; transition: transform .15s; }
+.gm-opt:hover { transform: translateY(-2px); }
+.gm-opt.is-right { background: #9de6c3; }
+.gm-opt.is-wrong { background: #f4a3b4; text-decoration: line-through; }
+.gm-why { margin-top: .8em; padding: .7em .9em; border: 2px dashed #141414; border-radius: .6em; background: #fffdf3; display: flex; flex-wrap: wrap; align-items: center; gap: .5em .8em; animation: pop .25s ease both; }
+.gm-why .gm-go { margin-left: auto; }
+
+/* sort race */
+.gm-guess p { margin: 0 0 .4em; }
+.gm-race { display: grid; grid-template-columns: repeat(2, 1fr); gap: .7em; }
+.gm-lane { border: 2px solid #141414; border-radius: .6em; padding: .5em .6em .6em; background: #fff; transition: background-color .3s, transform .3s; }
+.gm-lane.is-done { background: #f6f6f2; }
+.gm-lane.is-win { background: #fdeb7a; transform: scale(1.03); }
+.gm-lane-h { display: flex; justify-content: space-between; gap: .5em; font-size: .78em; margin-bottom: .35em; }
+.gm-lane-h span { font-family: 'Courier Prime', monospace; }
+.gm-bars { height: 5em; display: flex; align-items: flex-end; gap: 2px; }
+.gm-bars i { flex: 1; background: #9db8f6; border-radius: 2px 2px 0 0; }
+.gm-bars i.hl { background: #e0533d; }
+.gm-lane.is-done .gm-bars i { background: #2f9e44; }
+
+/* maze solver */
+.gm-maze { max-width: 24em; display: grid; gap: 2px; padding: 2px; background: #141414; border: 2px solid #141414; border-radius: .5em; touch-action: none; user-select: none; }
+.gm-maze i { aspect-ratio: 1; background: #fffdf3; border-radius: 2px; cursor: crosshair; transition: background-color .15s; }
+.gm-maze i:hover { background: #eee6cf; }
+.gm-maze i.w { background: #3a3a44; }
+.gm-maze i.st { background: #2f9e44; }
+.gm-maze i.go { background: #e0533d; }
+.gm-maze i.vb { background: #9db8f6; }
+.gm-maze i.vd { background: #c39bf8; }
+.gm-maze i.p { background: #fdeb7a; }
+.gm-maze-btns { justify-content: flex-start; margin-top: .7em; }
+.gm-maze-btns button:disabled { opacity: .45; cursor: not-allowed; }
+.gm-warn { color: #c0392b; }
