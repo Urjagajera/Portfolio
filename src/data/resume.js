@@ -253,6 +253,15 @@ export const LEADERSHIP_VIDEO = {
   caption: 'Presenting Nirman live to the judges at CHAOS2COMMIT 2026 (2nd prize)',
 };
 
+// hosting the IEEE CHARUSAT General Body Meeting (Feb 2025): every chapter's executive team and ~150 students
+export const LEADERSHIP_EVENT_VIDEO = {
+  src: '/assets/resume/ieee-gbm.mp4',
+  poster: '/assets/resume/ieee-gbm-poster.jpg',
+  caption: 'Hosting the IEEE CHARUSAT General Body Meeting, Feb 2025: every chapter and ~150 students, with games and ice-breakers (tap for sound)',
+  controls: true,
+  ratio: '9 / 16',
+};
+
 export const LEADERSHIP_MEDIA = [
   cert('ieee-sb-secretary.jpg', 'IEEE certificate: Secretary, Student Branch'),
   cert('ieee-wie-secretary.jpg', 'IEEE certificate: Secretary, WIE Affinity Group'),

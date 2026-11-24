@@ -244,6 +244,8 @@ function Leadership({ open }) {
       ))}
       <div className="m-label">On stage: presenting to the judges</div>
       <LoopVideo {...R.LEADERSHIP_VIDEO} style={{ margin: '8px 0 4px' }} />
+      <div className="m-label">Hosting: IEEE General Body Meeting</div>
+      <LoopVideo {...R.LEADERSHIP_EVENT_VIDEO} style={{ margin: '8px auto 4px', maxWidth: 300 }} />
       <Thumbs items={R.LEADERSHIP_MEDIA} open={open} />
     </>
   );

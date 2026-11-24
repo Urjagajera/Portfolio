@@ -316,7 +316,7 @@ html[data-theme='dark'] img[src*='/assets/ref/']:not([src*='browse_scene']):not(
 .ld-spot { position: absolute; background: none; border: 0; padding: 0; cursor: pointer; border-radius: 30%; }
 .ld-spot:focus-visible { outline: none; }
 .ld-ring { position: absolute; inset: -14%; width: 128%; height: 128%; overflow: visible; pointer-events: none; }
-.ld-ring path { fill: none; stroke: #c99a1a; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 400; stroke-dashoffset: 400; transition: stroke-dashoffset .55s cubic-bezier(.4, 0, .2, 1); }
+.ld-ring path { fill: none; stroke: #c99a1a; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 2400; stroke-dashoffset: 2400; transition: stroke-dashoffset .7s cubic-bezier(.4, 0, .2, 1); }
 .ld-spot:hover .ld-ring path, .ld-spot:focus-visible .ld-ring path, .ld-spot.is-open .ld-ring path { stroke-dashoffset: 0; }
 .ld-tag { position: absolute; left: 50%; top: -42px; transform: translateX(-50%) rotate(-5deg) scale(.6); opacity: 0; white-space: nowrap; font-family: 'Reenie Beanie', 'Gaegu', cursive; font-size: 34px; color: #7a5a00; transition: opacity .25s ease, transform .35s cubic-bezier(.2, .9, .3, 1.5); pointer-events: none; }
 .ld-spot:hover .ld-tag, .ld-spot:focus-visible .ld-tag, .ld-spot.is-open .ld-tag { opacity: 1; transform: translateX(-50%) rotate(-5deg) scale(1); }

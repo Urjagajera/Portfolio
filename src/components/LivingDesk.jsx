@@ -144,7 +144,7 @@ export default function LivingDesk({ active }) {
           onClick={() => pick(o.id)}
         >
           <svg className="ld-ring" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M50 4C76 3 97 20 96 48 95 77 73 97 47 96 21 95 3 75 4 49 5 24 26 6 54 7" vectorEffect="non-scaling-stroke" />
+            <path d="M50 4C76 3 97 20 96 48 95 77 73 97 47 96 21 95 3 75 4 49 5 24 26 6 54 7" vectorEffect="non-scaling-stroke"/>
           </svg>
           <span className="ld-tag">{o.tag}</span>
         </button>

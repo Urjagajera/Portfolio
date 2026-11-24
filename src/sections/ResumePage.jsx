@@ -247,6 +247,8 @@ function Leadership() {
       ))}
       <Label style={{ marginTop: 40 }}>On stage: presenting to the judges</Label>
       <LoopVideo {...R.LEADERSHIP_VIDEO} />
+      <Label style={{ marginTop: 40 }}>Hosting: IEEE General Body Meeting</Label>
+      <LoopVideo {...R.LEADERSHIP_EVENT_VIDEO} style={{ maxWidth: 400 }} />
       <Label style={{ marginTop: 40 }}>Events & certificates</Label>
       <Gallery items={R.LEADERSHIP_MEDIA} />
     </>
