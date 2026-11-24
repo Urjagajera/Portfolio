@@ -4,6 +4,7 @@ import Lightbox, { LightboxHost } from '../components/Lightbox';
 import { BrandIcon } from '../components/BrandIcons';
 import { TABS } from '../components/Tabs';
 import LoopVideo from '../components/LoopVideo';
+import Games from '../components/Games';
 
 // theme colours (the side tabs): strong `on` + soft `off`
 const THEME = Object.fromEntries(TABS.map((t) => [t.id, { on: t.on, off: t.off }]));
@@ -311,6 +312,15 @@ function Achievements() {
   );
 }
 
+function GamesPage() {
+  return (
+    <>
+      <Head title="Games" />
+      <Games />
+    </>
+  );
+}
+
 function Additional() {
   return (
     <>
@@ -471,6 +481,7 @@ const ProfileBtn = ({ href, children, c }) => (
 );
 
 export const RESUME_PAGES = {
+  'r-games': GamesPage,
   'r-projects': Projects,
   'r-internship': Internship,
   'r-education': Education,

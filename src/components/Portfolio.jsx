@@ -111,7 +111,7 @@ function Portfolio({ onOpenProject, fit = 1.155, onNote, onClose }) {
             key={f.id}
             onClick={() => setSel(f.id)}
             className="absolute flex items-center border-0 p-0 text-left"
-            style={{ left: 7, right: 7, top: 43 + i * 52, height: 44, paddingLeft: 7, fontSize: 17.5, gap: 12, cursor: 'pointer', color: '#111', background: sel === f.id ? 'rgba(0,0,0,.09)' : 'transparent', whiteSpace: 'nowrap' }}
+            style={{ left: 7, right: 7, top: 43 + i * Math.min(52, 516 / FOLDERS.length), height: 44, paddingLeft: 7, fontSize: 17.5, gap: 12, cursor: 'pointer', color: '#111', background: sel === f.id ? 'rgba(0,0,0,.09)' : 'transparent', whiteSpace: 'nowrap' }}
           >
             <FolderIcon color={COLORS[i % 4]} />
             {f.label}

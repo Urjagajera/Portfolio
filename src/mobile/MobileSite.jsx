@@ -7,6 +7,7 @@ import { TABS } from '../components/Tabs';
 import QuickView from '../components/QuickView';
 import VisitorCount from '../components/VisitorCount';
 import LoopVideo from '../components/LoopVideo';
+import Games from '../components/Games';
 import Lightbox from '../components/Lightbox';
 import Doodle from '../components/Doodle';
 import { BrandIcon } from '../components/BrandIcons';
@@ -364,7 +365,7 @@ function ContactLinks({ dark }) {
 const FOLDER_VIEWS = {
   'r-projects': Projects, 'r-internship': Internship, 'r-education': Education, 'r-skills': Skills,
   'r-leadership': Leadership, 'r-hackathons': Hackathons, 'r-achievements': Achievements,
-  'r-certificates': Certificates, 'r-additional': Additional, 'r-contact': SummaryContact,
+  'r-certificates': Certificates, 'r-additional': Additional, 'r-contact': SummaryContact, 'r-games': Games,
 };
 const FOLDER_COLORS = ['#86aaaa', '#7fb48a', '#8a5f8f', '#9a9a62'];
 
