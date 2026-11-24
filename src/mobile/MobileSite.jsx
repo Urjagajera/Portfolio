@@ -122,6 +122,9 @@ function Hero({ onQuick }) {
       <div className="m-cta intro-fade" style={{ '--d': '1350ms' }}>
         <button type="button" className="m-btn m-btn-dark" onClick={onQuick}>&#9201; 60-second view</button>
         <a className="m-btn" href={R.RESUME_PDF} target="_blank" rel="noreferrer" download>Download resume &#8595;</a>
+        <button type="button" className="m-btn m-btn-term" onClick={() => window.dispatchEvent(new Event('open-terminal'))}>
+          <span className="term-glyph" aria-hidden="true">&gt;<i>_</i></span> Open my terminal
+        </button>
       </div>
       <div className="m-play" aria-label="Stickers you can drag">
         <Doodle n="rocket" x={6} y={10} w={78} r={-10} hint="fly me" intro={1450} />

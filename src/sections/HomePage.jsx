@@ -84,6 +84,9 @@ function Hero({ onGo }) {
         <button type="button" className="hero-cta hero-cta-quick" onClick={openQuick} aria-haspopup="dialog">
           &#9201; 60-sec view
         </button>
+        <button type="button" className="hero-cta hero-cta-term" onClick={() => window.dispatchEvent(new Event('open-terminal'))} title="Open my terminal (or press `)">
+          <span className="term-glyph" aria-hidden="true">&gt;<i>_</i></span> terminal
+        </button>
       </div>
       <QuickView open={quick} onClose={closeQuick} />
 

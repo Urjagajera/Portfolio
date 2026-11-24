@@ -411,3 +411,11 @@ html[data-theme='dark'] .term-wrap { background: rgba(236, 236, 232, .45); }
 .term-quick span { color: #78a37e; font-size: 14px; margin-right: 2px; }
 .term-quick button { border: 1.5px solid #2f6b3a; background: #16261a; color: #b9f5c0; border-radius: 7px; padding: 3px 11px; font: inherit; font-size: 14.5px; transition: background-color .15s, border-color .15s, transform .15s; }
 .term-quick button:hover { background: #24452b; border-color: #7be08a; transform: translateY(-1px); }
+/* the terminal button next to "60-sec view" (and on phones under the hero) */
+.hero-cta-term { background: #0b100c !important; color: #b9f5c0 !important; border-color: #141414 !important; font-family: 'Courier Prime', monospace; font-weight: 700; }
+.hero-cta-term:hover { background: #16261a !important; }
+.term-glyph { color: #7be08a; font-weight: 700; margin-right: 2px; }
+.term-glyph i { font-style: normal; animation: termBlink 1s steps(1) infinite; }
+@keyframes termBlink { 50% { opacity: 0 } }
+.m-btn.m-btn-term { background: #0b100c; color: #b9f5c0; font-family: 'Courier Prime', monospace; font-weight: 700; box-shadow: 3px 3px 0 #7be08a; }
+@media (prefers-reduced-motion: reduce) { .term-glyph i { animation: none; } }
