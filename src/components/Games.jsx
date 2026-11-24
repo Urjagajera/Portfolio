@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { GradientGolf, KMeansPainter, TrainNeuron, YouVsModel } from './MLGames';
 
 // The "Games" folder: four small games, each opening with a rules card. Best scores are kept in this browser.
 // Everything is sized in em, so the same component fits the desktop Browse window and the phone folder list.
@@ -272,6 +273,32 @@ function SpeedTyper({ onEnd }) {
 
 /* ------------------------------------------------------------------ Big-O Match */
 const BIGO_OPTS = ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)', 'O(n²)', 'O(2ⁿ)'];
+// growth curves for the chart (n from 1 to 16, y clipped to the chart); scaled so every curve is readable
+const CURVE = {
+  'O(1)': () => 10,
+  'O(log n)': (n) => 10 + 9 * Math.log2(n),
+  'O(n)': (n) => 6 * n,
+  'O(n log n)': (n) => 2 * n * Math.log2(n),
+  'O(n²)': (n) => 0.42 * n * n,
+  'O(2ⁿ)': (n) => 2 ** (n / 1.6) * 1.2,
+};
+const CURVE_COLOR = { 'O(1)': '#2f9e44', 'O(log n)': '#1c7ed6', 'O(n)': '#7048e8', 'O(n log n)': '#e8590c', 'O(n²)': '#c2255c', 'O(2ⁿ)': '#141414' };
+const CH = { w: 380, h: 230, l: 34, b: 26, t: 10, r: 86, nMax: 16, yMax: 110 };
+const cx = (n) => CH.l + ((n - 1) / (CH.nMax - 1)) * (CH.w - CH.l - CH.r);
+const cy = (v) => CH.h - CH.b - (Math.min(v, CH.yMax) / CH.yMax) * (CH.h - CH.b - CH.t);
+const curvePts = (k) => { const pts = []; for (let n = 1; n <= CH.nMax; n += 0.25) { const v = CURVE[k](n); pts.push([cx(n), cy(v)]); if (v > CH.yMax) break; } return pts; };
+const curvePath = (k) => curvePts(k).map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+const curveEnd = (k) => { const p = curvePts(k); return p[p.length - 1]; };
+// labels sit in a column on the right, stacked so they never overlap, each joined to its curve by a thin line
+const TAG_X = CH.w - 70;
+const TAG_Y = (() => {
+  const ends = BIGO_OPTS.map((k) => [k, Math.max(curveEnd(k)[1], CH.t + 8)]).sort((x, y) => x[1] - y[1]);
+  const out = {}; let last = -Infinity;
+  for (const [k, y] of ends) { const yy = Math.max(y, last + 19); out[k] = yy; last = yy; }
+  const over = last - (CH.h - CH.b - 4); if (over > 0) for (const k in out) out[k] -= over;
+  return out;
+})();
+
 const BIGO = [
   { code: 'function first(arr) {\n  return arr[0];\n}', a: 'O(1)', why: 'One step, no matter how big the array is.' },
   { code: 'let sum = 0;\nfor (let i = 0; i < n; i++) {\n  sum += arr[i];\n}', a: 'O(n)', why: 'One pass over n items.' },
@@ -279,38 +306,84 @@ const BIGO = [
   { code: 'while (lo <= hi) {\n  const mid = (lo + hi) >> 1;\n  if (arr[mid] === x) return mid;\n  arr[mid] < x ? lo = mid + 1 : hi = mid - 1;\n}', a: 'O(log n)', why: 'Binary search: the range halves every step.' },
   { code: 'for (let i = 1; i < n; i *= 2) {\n  steps++;\n}', a: 'O(log n)', why: 'i doubles each time, so it reaches n in log₂ n steps.' },
   { code: 'const seen = new Map();\n// ...\nseen.get(key);', a: 'O(1)', why: 'A hash map lookup is constant time on average.' },
-  { code: 'for (const x of arr) total += x;\nfor (const x of arr) max = Math.max(max, x);', a: 'O(n)', why: 'Two loops one after the other: 2n, which is still O(n).' },
+  { code: 'for (const x of arr) total += x;\nfor (const x of arr) max = Math.max(max, x);', a: 'O(n)', why: 'Two loops one after the other: 2n, still O(n).' },
   { code: 'for (let i = 0; i < n; i++)\n  for (let j = i + 1; j < n; j++)\n    if (arr[i] === arr[j]) dup = true;', a: 'O(n²)', why: 'Every pair is checked: about n²/2 steps, so O(n²).' },
-  { code: 'function mergeSort(a) {\n  if (a.length < 2) return a;\n  const m = a.length >> 1;\n  return merge(mergeSort(a.slice(0, m)), mergeSort(a.slice(m)));\n}', a: 'O(n log n)', why: 'log n levels of splitting, and n work to merge each level.' },
+  { code: 'function mergeSort(a) {\n  if (a.length < 2) return a;\n  const m = a.length >> 1;\n  return merge(mergeSort(a.slice(0, m)),\n               mergeSort(a.slice(m)));\n}', a: 'O(n log n)', why: 'log n levels of splitting, and n work to merge each level.' },
   { code: 'arr.sort((a, b) => a - b);', a: 'O(n log n)', why: 'Built-in comparison sorts run in n log n.' },
   { code: 'function fib(n) {\n  if (n < 2) return n;\n  return fib(n - 1) + fib(n - 2);\n}', a: 'O(2ⁿ)', why: 'Each call branches into two more calls.' },
   { code: 'for (let i = 0; i < n; i++)\n  for (let k = 0; k < 10; k++)\n    work(i, k);', a: 'O(n)', why: 'The inner loop is a fixed 10 steps, so 10n is still O(n).' },
 ];
+const Q_TIME = 15; // seconds per question
 function BigOMatch({ onEnd }) {
   const ROUNDS = 10;
   const qs = useMemo(() => shuffle(BIGO).slice(0, ROUNDS), []);
   const [i, setI] = useState(0);
   const [pick, setPick] = useState(null);
+  const [hover, setHover] = useState(null);
   const [score, setScore] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [left, setLeft] = useState(Q_TIME);
   const q = qs[i];
-  const answer = (o) => { if (pick) return; setPick(o); if (o === q.a) setScore((s) => s + 1); };
-  const next = () => {
-    if (i + 1 >= ROUNDS) { onEnd({ correct: score }); return; }
-    setI(i + 1); setPick(null);
+
+  useEffect(() => {
+    if (pick) return undefined;
+    const t0 = performance.now();
+    const id = setInterval(() => {
+      const l = Math.max(0, Q_TIME - (performance.now() - t0) / 1000);
+      setLeft(l);
+      if (l <= 0) { clearInterval(id); setPick('timeout'); setStreak(0); }
+    }, 100);
+    return () => clearInterval(id);
+  }, [i, pick]);
+
+  const answer = (o) => {
+    if (pick) return;
+    setPick(o);
+    if (o === q.a) { setScore((s) => s + 1); setStreak((s) => { const n = s + 1; setBestStreak((b) => Math.max(b, n)); return n; }); } else setStreak(0);
   };
+  const next = () => {
+    if (i + 1 >= ROUNDS) { onEnd({ correct: score, streak: bestStreak }); return; }
+    setI(i + 1); setPick(null); setLeft(Q_TIME);
+  };
+  const right = pick && pick === q.a;
+
   return (
-    <div>
-      <div className="gm-hud"><span>question <b>{i + 1}/{ROUNDS}</b></span><span>correct <b>{score}</b></span></div>
-      <pre className="gm-snip gm-snip-code">{q.code}</pre>
-      <div className="gm-opts">
-        {BIGO_OPTS.map((o) => (
-          <button key={o} type="button" onClick={() => answer(o)}
-            className={`gm-opt${pick ? (o === q.a ? ' is-right' : o === pick ? ' is-wrong' : '') : ''}`}>{o}</button>
-        ))}
+    <div className="gm-bigo">
+      <div className="gm-hud"><span>question <b>{i + 1}/{ROUNDS}</b></span><span>correct <b>{score}</b></span><span>streak <b>{streak ? `🔥 ${streak}` : 0}</b></span></div>
+      <div className="gm-timer"><i style={{ width: `${(left / Q_TIME) * 100}%`, background: left < 4 ? '#e0533d' : '#7be08a' }} /></div>
+      <div className="gm-bigo-cols">
+        <pre className="gm-snip gm-snip-code">{q.code}</pre>
+        <div className="gm-chart-wrap">
+          <div className="gm-chart-hint">{pick ? (right ? 'Correct!' : pick === 'timeout' ? 'Time is up!' : 'Not quite.') : 'Click the curve that matches the code'}</div>
+          <svg className="gm-chart" viewBox={`0 0 ${CH.w} ${CH.h}`} role="group" aria-label="Growth curves">
+            <path d={`M${CH.l} ${CH.t} V${CH.h - CH.b} H${CH.w - CH.r + 8}`} className="gm-axis" />
+            <text x={CH.w - CH.r + 4} y={CH.h - 8} className="gm-ax-t">n →</text>
+            <text x="4" y={CH.t + 10} className="gm-ax-t">work</text>
+            {BIGO_OPTS.map((k) => {
+              const d = curvePath(k); const [ex, ey] = curveEnd(k);
+              const state = pick ? (k === q.a ? 'right' : k === pick ? 'wrong' : 'dim') : hover === k ? 'hover' : '';
+              return (
+                <g key={k} className={`gm-curve ${state}`} onClick={() => answer(k)} onPointerEnter={() => setHover(k)} onPointerLeave={() => setHover(null)} style={{ '--c': CURVE_COLOR[k] }}>
+                  <path d={d} className="gm-curve-line" pathLength="100" />
+                  <path d={d} className="gm-curve-hit" />
+                  <path d={`M${ex} ${ey} L${TAG_X - 2} ${TAG_Y[k]}`} className="gm-curve-lead" />
+                  <g className="gm-curve-tag" transform={`translate(${TAG_X} ${TAG_Y[k]})`}>
+                    <rect x="0" y="-9" width="68" height="17" rx="5" />
+                    <text x="34" y="3">{k}</text>
+                  </g>
+                  {pick && k === q.a && (
+                    <circle r="5" className="gm-runner"><animateMotion dur="1.8s" repeatCount="indefinite" path={d} /></circle>
+                  )}
+                </g>
+              );
+            })}
+          </svg>
+        </div>
       </div>
       {pick && (
         <div className="gm-why">
-          <b>{pick === q.a ? 'Correct!' : `It's ${q.a}.`}</b> {q.why}
+          <b>{right ? 'Correct!' : `It's ${q.a}.`}</b> {q.why}
           <button type="button" className="gm-go" onClick={next}>{i + 1 >= ROUNDS ? 'See score' : 'Next →'}</button>
         </div>
       )}
@@ -349,45 +422,88 @@ function framesOf(kind, input) {
   return f;
 }
 const SORTS = ['Bubble', 'Insertion', 'Merge', 'Quick'];
+const SORT_INFO = { Bubble: 'O(n²) · swaps neighbours', Insertion: 'O(n²) · builds a sorted part', Merge: 'O(n log n) · split & merge', Quick: 'O(n log n) avg · pivots' };
+const MEDALS = ['🥇', '🥈', '🥉', '4th'];
+const N_BARS = 28;
+const barColor = (v) => `hsl(${Math.round(((v - 1) / (N_BARS - 1)) * 280)} 75% 62%)`;
+function MiniBars({ kind }) {
+  // a tiny looping "sorting" icon for the guess cards
+  return (
+    <span className={`gm-mini gm-mini-${kind}`} aria-hidden="true">
+      {[5, 2, 7, 1, 6, 3, 8, 4].map((v, i) => <i key={i} style={{ '--h': `${v * 12}%`, '--i': i, background: barColor(v * 3.5) }} />)}
+    </span>
+  );
+}
 function SortRace({ onEnd }) {
-  const input = useMemo(() => shuffle(Array.from({ length: 24 }, (_, i) => i + 1)), []);
+  const input = useMemo(() => shuffle(Array.from({ length: N_BARS }, (_, i) => i + 1)), []);
   const runs = useMemo(() => SORTS.map((k) => ({ k, frames: framesOf(k, input) })), [input]);
-  const winner = useMemo(() => runs.reduce((w, r) => (r.frames.length < w.frames.length ? r : w)).k, [runs]);
+  const order = useMemo(() => [...runs].sort((a, b) => a.frames.length - b.frames.length).map((r) => r.k), [runs]);
+  const winner = order[0];
   const [guess, setGuess] = useState(null);
   const [step, setStep] = useState(0);
   const total = Math.max(...runs.map((r) => r.frames.length));
   useEffect(() => {
     if (!guess) return undefined;
-    const id = setInterval(() => setStep((s) => { if (s + 1 >= total) { clearInterval(id); return s; } return s + 1; }), 28);
+    const id = setInterval(() => setStep((s) => { if (s + 1 >= total) { clearInterval(id); return s; } return s + 1; }), 22);
     return () => clearInterval(id);
   }, [guess, total]);
+  const finished = guess && step >= total - 1;
   useEffect(() => {
-    if (guess && step >= total - 1) {
-      const t = setTimeout(() => onEnd({ correct: guess === winner, guess, winner, counts: runs.map((r) => [r.k, r.frames.length - 1]) }), 1600);
-      return () => clearTimeout(t);
-    }
-    return undefined;
-  }, [step, total, guess]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!finished) return undefined;
+    const t = setTimeout(() => onEnd({ correct: guess === winner, guess, winner, counts: runs.map((r) => [r.k, r.frames.filter((f) => f.x >= 0).length]) }), 3200);
+    return () => clearTimeout(t);
+  }, [finished]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!guess) {
     return (
       <div className="gm-guess">
-        <p>Same 24 shuffled bars for everyone. <b>Which algorithm finishes first</b> (fewest comparisons)?</p>
-        <div className="gm-opts">{SORTS.map((k) => <button key={k} type="button" className="gm-opt" onClick={() => setGuess(k)}>{k} sort</button>)}</div>
+        <p>Same {N_BARS} shuffled bars for everyone. <b>Which algorithm finishes first</b> (fewest comparisons)?</p>
+        <div className="gm-guess-cards">
+          {SORTS.map((k) => (
+            <button key={k} type="button" className="gm-guess-card" onClick={() => setGuess(k)}>
+              <MiniBars kind={k} />
+              <b>{k} sort</b>
+              <span>{SORT_INFO[k]}</span>
+            </button>
+          ))}
+        </div>
       </div>
     );
   }
+  const doneAt = (r) => r.frames.length - 1;
   return (
-    <div className="gm-race">
-      {runs.map((r) => {
-        const fi = Math.min(step, r.frames.length - 1); const fr = r.frames[fi]; const fin = fi === r.frames.length - 1;
-        return (
-          <div key={r.k} className={`gm-lane${fin ? ' is-done' : ''}${fin && r.k === winner ? ' is-win' : ''}`}>
-            <div className="gm-lane-h"><b>{r.k}{r.k === guess ? ' (your pick)' : ''}</b><span>{fi} comparisons{fin ? ' ✓' : ''}</span></div>
-            <div className="gm-bars">{fr.a.map((v, i) => <i key={i} className={i === fr.x || i === fr.y ? 'hl' : ''} style={{ height: `${(v / 24) * 100}%` }} />)}</div>
-          </div>
-        );
-      })}
+    <div>
+      <div className="gm-race">
+        {runs.map((r) => {
+          const fi = Math.min(step, doneAt(r)); const fr = r.frames[fi]; const fin = fi === doneAt(r);
+          const cmps = r.frames.slice(0, fi + 1).filter((f) => f.x >= 0).length;
+          const place = order.indexOf(r.k);
+          return (
+            <div key={r.k} className={`gm-lane${fin ? ' is-done' : ''}${fin && place === 0 ? ' is-win' : ''}`}>
+              <div className="gm-lane-h">
+                <b>{r.k}{r.k === guess ? ' · your pick' : ''}</b>
+                <span>{cmps} comparisons {fin && <em className="gm-medal">{MEDALS[place]}</em>}</span>
+              </div>
+              <div className="gm-bars">
+                {fr.a.map((v, i) => (
+                  <i key={i} className={i === fr.x || i === fr.y ? 'hl' : ''} style={{ height: `${(v / N_BARS) * 100}%`, background: barColor(v) }} />
+                ))}
+              </div>
+              <div className="gm-prog"><i style={{ width: `${(fi / doneAt(r)) * 100}%` }} /></div>
+            </div>
+          );
+        })}
+      </div>
+      {finished && (
+        <div className="gm-podium">
+          {[1, 0, 2].map((p) => (
+            <div key={p} className={`gm-step gm-step-${p}`}>
+              <span>{MEDALS[p]}</span><b>{order[p]}</b>
+              <i style={{ height: `${[3.2, 2.3, 1.6][p]}em` }}>{p + 1}</i>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -472,46 +588,70 @@ function MazeSolver({ onEnd }) {
 /* ------------------------------------------------------------------ the folder */
 const GAMES = [
   {
-    id: 'bugs', name: 'Bug Squash', color: '#f4717f', blurb: 'catch bugs before production',
+    id: 'bugs', cat: 'fun', name: 'Bug Squash', color: '#f4717f', blurb: 'catch bugs before production',
     rules: ['Bugs crawl along the lines of code toward production.', 'Click or tap a bug to squash it: +10, more with a combo.', 'Every bug that reaches production costs 5 points and breaks your combo.', 'You have 30 seconds. They start slow and speed up.'],
     Comp: BugSquash,
     result: (r) => ({ main: `${r.score} points`, sub: `${r.squashed} squashed · ${r.escaped} escaped`, key: r.score, better: (a, b) => a > b, fmt: (v) => `${v} points` }),
   },
   {
-    id: 'memory', name: 'Stack Memory', color: '#9be3ea', blurb: 'match my tech stack',
+    id: 'memory', cat: 'fun', name: 'Stack Memory', color: '#9be3ea', blurb: 'match my tech stack',
     rules: ['16 cards hide 8 pairs from my tech stack.', 'Flip two cards at a time; a match stays face up.', 'Clear the board in as few moves as you can.', 'The clock starts on your first flip.'],
     Comp: StackMemory,
     result: (r) => ({ main: `${r.moves} moves`, sub: `in ${r.secs} seconds`, key: r.moves, better: (a, b) => a < b, fmt: (v) => `${v} moves` }),
   },
   {
-    id: 'karate', name: 'Karate Reflex', color: '#c39bf8', blurb: 'break the board, earn a belt',
+    id: 'karate', cat: 'fun', name: 'Karate Reflex', color: '#c39bf8', blurb: 'break the board, earn a belt',
     rules: ['A marker sweeps across the bar.', 'Strike (Space, or the STRIKE button) when it is inside the green zone.', 'Closer to the centre = more points, up to 100 per board.', '5 boards. The zone shrinks and the marker speeds up each round.'],
     Comp: KarateReflex,
     result: (r) => ({ main: `${r.score} / 500`, sub: BELTS.filter(([min]) => r.score >= min).pop()[1], key: r.score, better: (a, b) => a > b, fmt: (v) => `${v} / 500` }),
   },
   {
-    id: 'typer', name: 'Speed Typer', color: '#fdeb7a', blurb: 'type real code, fast',
+    id: 'typer', cat: 'fun', name: 'Speed Typer', color: '#fdeb7a', blurb: 'type real code, fast',
     rules: ['A real code snippet appears (React, SQL, Python, git...).', 'Type it exactly. The timer starts on your first key.', 'Mistakes turn red; fix them with Backspace.', 'Your score is words per minute, plus accuracy.'],
     Comp: SpeedTyper,
     result: (r) => ({ main: `${r.wpm} WPM`, sub: `${r.acc}% accuracy`, key: r.wpm, better: (a, b) => a > b, fmt: (v) => `${v} WPM` }),
   },
   {
-    id: 'bigo', name: 'Big-O Match', color: '#9db8f6', blurb: 'how fast is this code?',
-    rules: ['A piece of code appears.', 'Pick its time complexity: how the work grows as n grows (O(1), O(log n), O(n)...).', 'After each answer you see why, so you learn as you play.', '10 questions. Score = correct answers.'],
+    id: 'bigo', cat: 'algo', name: 'Big-O Match', color: '#9db8f6', blurb: 'how fast is this code?',
+    rules: ['A piece of code appears next to a chart of growth curves.', 'Click the curve that shows how its work grows as n grows.', '15 seconds per question; keep a streak going 🔥.', 'After each answer you see why, so you learn as you play. 10 questions.'],
     Comp: BigOMatch,
     result: (r) => ({ main: `${r.correct} / 10`, sub: r.correct >= 9 ? 'Algorithms whiz!' : r.correct >= 6 ? 'Solid. A bit more practice and you are there.' : 'Now you know a few more complexities!', key: r.correct, better: (a, b) => a > b, fmt: (v) => `${v} / 10` }),
   },
   {
-    id: 'sort', name: 'Sort Race', color: '#9de6c3', blurb: 'guess the fastest sort',
-    rules: ['Four sorting algorithms get the same 24 shuffled bars.', 'Before the race, guess which one finishes with the fewest comparisons.', 'Watch them race side by side; red bars are being compared.', 'A new shuffle every race, so the winner can change.'],
+    id: 'sort', cat: 'algo', name: 'Sort Race', color: '#9de6c3', blurb: 'guess the fastest sort',
+    rules: ['Four sorting algorithms get the same 28 shuffled rainbow bars.', 'Before the race, guess which one finishes with the fewest comparisons.', 'Watch them race side by side; red bars are being compared.', 'A new shuffle every race, so the winner can change.'],
     Comp: SortRace,
     result: (r) => ({ main: r.correct ? 'You called it!' : `${r.winner} sort won`, sub: (r.counts || []).map(([k, n]) => `${k} ${n}`).join(' · ') + ' comparisons', key: r.correct ? 1 : 0, better: (a, b) => a > b, fmt: (v) => (v ? 'guessed a winner' : 'no correct guess yet') }),
   },
   {
-    id: 'maze', name: 'Maze Solver', color: '#f6b67a', blurb: 'BFS vs DFS path finding',
+    id: 'maze', cat: 'algo', name: 'Maze Solver', color: '#f6b67a', blurb: 'BFS vs DFS path finding',
     rules: ['Draw walls by clicking or dragging on the grid (click a wall to remove it).', 'Goal: make the SHORTEST path from start (green) to goal (red) as LONG as possible, without blocking it.', 'Run BFS to find the shortest path; run DFS to see how a depth-first search wanders instead.', 'Submit to score: your score is BFS’s path length.'],
     Comp: MazeSolver,
     result: (r) => ({ main: `${r.len} steps`, sub: `shortest path with ${r.walls} walls · BFS visited ${r.visited} cells`, key: r.len, better: (a, b) => a > b, fmt: (v) => `${v} steps` }),
+  },
+  {
+    id: 'gd', cat: 'ml', name: 'Gradient Descent Golf', color: '#ffc9a8', blurb: 'roll into the global minimum',
+    rules: ['The curve is a model’s loss; lower is better. The flag marks the global minimum.', 'Each Step moves the ball downhill: new x = x − learning rate × slope.', 'Too small a learning rate crawls (or gets stuck in the local minimum); too big overshoots or flies off.', 'Reach the flag in as few steps as possible (20 max).'],
+    Comp: GradientGolf,
+    result: (r) => ({ main: r.won ? `Hole in ${r.steps}` : 'Missed the hole', sub: r.won ? 'that is how learning rate shapes training' : 'tip: one bold step, then small ones', key: r.won ? r.steps : 99, better: (a, b) => a < b, fmt: (v) => (v === 99 ? 'not solved yet' : `${v} steps`) }),
+  },
+  {
+    id: 'kmeans', cat: 'ml', name: 'K-Means Painter', color: '#b2f2bb', blurb: 'guess the clusters',
+    rules: ['Grey points appear in a few hidden groups. You can click to add more.', 'Guess how many clusters (K) there are.', 'Watch k-means work: points take the colour of their nearest centroid (×), centroids move to the middle of their points, repeat until nothing moves.', '3 rounds. Score = correct guesses.'],
+    Comp: KMeansPainter,
+    result: (r) => ({ main: `${r.correct} / 3`, sub: 'clusters guessed right', key: r.correct, better: (a, b) => a > b, fmt: (v) => `${v} / 3` }),
+  },
+  {
+    id: 'neuron', cat: 'ml', name: 'Train the Neuron', color: '#d0bfff', blurb: 'you vs a perceptron',
+    rules: ['Red and blue dots can be split by a straight line.', 'Drag the two handles to draw your best dividing line, then lock it in.', 'A single neuron (perceptron) then learns its own line live, epoch by epoch.', 'Score = how many dots your line gets right.'],
+    Comp: TrainNeuron,
+    result: (r) => ({ main: `You ${r.you}% · neuron ${r.model}%`, sub: `the neuron needed ${r.epochs} epochs`, key: r.you, better: (a, b) => a > b, fmt: (v) => `${v}%` }),
+  },
+  {
+    id: 'knn', cat: 'ml', name: 'You vs the Model', color: '#a5d8ff', blurb: 'beat a KNN classifier',
+    rules: ['Red points sit in the middle, blue ones around them.', 'A new black point appears: say red or blue.', 'A KNN model answers too, by voting with its 5 nearest neighbours (you will see the lines).', '10 points. At the end, see how the model splits the whole plane.'],
+    Comp: YouVsModel,
+    result: (r) => ({ main: `You ${r.you} · model ${r.model}`, sub: r.you > r.model ? 'You beat the machine!' : r.you === r.model ? 'A draw with the machine.' : 'The model wins this time.', key: r.you, better: (a, b) => a > b, fmt: (v) => `${v} / 10` }),
   },
 ];
 
@@ -544,19 +684,24 @@ export default function Games() {
     return (
       <div className="gm">
         <p className="gm-intro">Take a break. Pick a game folder:</p>
+        {[['fun', 'Just for fun'], ['algo', 'Algorithms'], ['ml', 'Machine learning']].map(([cat, title]) => (
+        <section key={cat} className="gm-shelf">
+        <h5 className="gm-shelf-h">{title}</h5>
         <div className="gm-grid">
-          {GAMES.map((x) => {
+          {GAMES.filter((x) => x.cat === cat).map((x) => {
             const b = best.get(x.id);
             return (
               <button key={x.id} type="button" className="gm-pick" onClick={() => { setGame(x.id); setStage('rules'); setRes(null); }}>
                 <Folder color={x.color} />
                 <b>{x.name}</b>
                 <span>{x.blurb}</span>
-                {b !== null && <em>best: {x.result({ score: b, moves: b, wpm: b, secs: 0, squashed: 0, escaped: 0, acc: 0 }).fmt(b)}</em>}
+                {b !== null && <em>best: {x.result({ score: b, moves: b, wpm: b, correct: b, len: b, you: b, model: 0, won: true, steps: b, secs: 0, squashed: 0, escaped: 0, acc: 0, walls: 0, visited: 0, epochs: 0, counts: [] }).fmt(b)}</em>}
               </button>
             );
           })}
         </div>
+        </section>
+        ))}
       </div>
     );
   }
