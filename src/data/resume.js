@@ -27,7 +27,7 @@ export const FOLDERS = [
   { id: 'r-certificates', label: 'Certificates', open: true },
   { id: 'r-additional', label: 'Additional Info', open: true },
   { id: 'r-contact', label: 'Summary & Contact', open: true },
-  { id: 'r-games', label: 'Games', open: true },
+  { id: 'r-playground', label: 'Playground', open: true },
 ];
 
 export const SUMMARY = 'Computer Science student with a strong interest in full-stack web development and practical application of AI in real products. Comfortable across React, Next.js, Node.js, Flask and SQL databases, with experience taking projects from idea to working, deployed applications. Completed a software development internship at MCT IT Solutions, building role-based dashboards for a real agricultural supply-chain platform as part of a 4-person team, and has separately built and shipped individual full-stack projects on the side. Also active in hackathons, technical clubs and student leadership.';
