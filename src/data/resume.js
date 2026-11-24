@@ -257,7 +257,7 @@ export const LEADERSHIP_VIDEO = {
 export const LEADERSHIP_EVENT_VIDEO = {
   src: '/assets/resume/ieee-gbm.mp4',
   poster: '/assets/resume/ieee-gbm-poster.jpg',
-  caption: 'Hosting the IEEE CHARUSAT General Body Meeting, Feb 2025: every chapter and ~150 students, with games and ice-breakers (tap for sound)',
+  caption: 'Hosting the IEEE CHARUSAT General Body Meeting, Feb 2025: every chapter and ~150 students, with games and ice-breakers',
   controls: true,
   ratio: '9 / 16',
 };
