@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { GradientGolf, KMeansPainter, TrainNeuron, YouVsModel } from './MLGames';
+import { GradientGolf } from './MLGames';
 
 // The "Games" folder: four small games, each opening with a rules card. Best scores are kept in this browser.
 // Everything is sized in em, so the same component fits the desktop Browse window and the phone folder list.
@@ -634,24 +634,6 @@ const GAMES = [
     rules: ['The curve is a model’s loss; lower is better. The flag marks the global minimum.', 'Each Step moves the ball downhill: new x = x − learning rate × slope.', 'Too small a learning rate crawls (or gets stuck in the local minimum); too big overshoots or flies off.', 'Reach the flag in as few steps as possible (20 max).'],
     Comp: GradientGolf,
     result: (r) => ({ main: r.won ? `Hole in ${r.steps}` : 'Missed the hole', sub: r.won ? 'that is how learning rate shapes training' : 'tip: one bold step, then small ones', key: r.won ? r.steps : 99, better: (a, b) => a < b, fmt: (v) => (v === 99 ? 'not solved yet' : `${v} steps`) }),
-  },
-  {
-    id: 'kmeans', cat: 'ml', name: 'K-Means Painter', color: '#b2f2bb', blurb: 'guess the clusters',
-    rules: ['Grey points appear in a few hidden groups. You can click to add more.', 'Guess how many clusters (K) there are.', 'Watch k-means work: points take the colour of their nearest centroid (×), centroids move to the middle of their points, repeat until nothing moves.', '3 rounds. Score = correct guesses.'],
-    Comp: KMeansPainter,
-    result: (r) => ({ main: `${r.correct} / 3`, sub: 'clusters guessed right', key: r.correct, better: (a, b) => a > b, fmt: (v) => `${v} / 3` }),
-  },
-  {
-    id: 'neuron', cat: 'ml', name: 'Train the Neuron', color: '#d0bfff', blurb: 'you vs a perceptron',
-    rules: ['Red and blue dots can be split by a straight line.', 'Drag the two handles to draw your best dividing line, then lock it in.', 'A single neuron (perceptron) then learns its own line live, epoch by epoch.', 'Score = how many dots your line gets right.'],
-    Comp: TrainNeuron,
-    result: (r) => ({ main: `You ${r.you}% · neuron ${r.model}%`, sub: `the neuron needed ${r.epochs} epochs`, key: r.you, better: (a, b) => a > b, fmt: (v) => `${v}%` }),
-  },
-  {
-    id: 'knn', cat: 'ml', name: 'You vs the Model', color: '#a5d8ff', blurb: 'beat a KNN classifier',
-    rules: ['Red points sit in the middle, blue ones around them.', 'A new black point appears: say red or blue.', 'A KNN model answers too, by voting with its 5 nearest neighbours (you will see the lines).', '10 points. At the end, see how the model splits the whole plane.'],
-    Comp: YouVsModel,
-    result: (r) => ({ main: `You ${r.you} · model ${r.model}`, sub: r.you > r.model ? 'You beat the machine!' : r.you === r.model ? 'A draw with the machine.' : 'The model wins this time.', key: r.you, better: (a, b) => a > b, fmt: (v) => `${v} / 10` }),
   },
 ];
 
