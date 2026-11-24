@@ -139,22 +139,22 @@ export default function Terminal() {
   useEffect(() => {
     if (!open) return;
     if (!lines.length) {
-      setLines([{ out: <span className="t-boot">URJA-OS v2026.11 · booting... done.{'\n'}Welcome! Type <b>help</b> to see what I can do, or <b>hire</b> if you are in a hurry.</span> }]);
+      setLines([{ out: <span className="t-boot">URJA-OS v2026.11 · booting... done.{'\n'}Welcome! Click a command below, or type one and press Enter. <b>help</b> lists them all.</span> }]);
     }
     setTimeout(() => inputRef.current && inputRef.current.focus(), 60);
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight; }, [lines]);
 
-  const submit = (e) => {
-    e.preventDefault();
-    const raw = input;
-    setInput(''); setHi(-1);
+  const exec = (raw) => {
     if (raw.trim()) setHist((h) => [raw, ...h].slice(0, 50));
     if (raw.trim().toLowerCase() === 'clear') { setLines([]); return; }
     const out = run(raw, { game, setGame, close: () => setOpen(false) });
     setLines((l) => [...l, { cmd: raw, prompt: game ? 'guess>' : null, out }]);
   };
+  const submit = (e) => { e.preventDefault(); const raw = input; setInput(''); setHi(-1); exec(raw); };
+  // one-click commands, so nobody has to know what to type
+  const QUICK = ['whoami', 'projects', 'skills', 'experience', 'achievements', 'hire', 'contact', 'resume', 'guess', 'theme'];
 
   const onKeyDown = (e) => {
     if (e.key === 'Escape') { setOpen(false); return; }
@@ -188,6 +188,12 @@ export default function Terminal() {
             <span className="t-prompt">{game ? 'guess>' : 'urja@portfolio:~$'}</span>
             <input ref={inputRef} value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={onKeyDown} spellCheck={false} autoCapitalize="off" autoComplete="off" aria-label="Terminal command" />
           </form>
+        </div>
+        <div className="term-quick" aria-label="Quick commands">
+          <span>click or type:</span>
+          {(game ? ['quit'] : QUICK).map((c) => (
+            <button key={c} type="button" onClick={() => { exec(c); setTimeout(() => inputRef.current && inputRef.current.focus(), 0); }}>{c}</button>
+          ))}
         </div>
       </div>
     </div>

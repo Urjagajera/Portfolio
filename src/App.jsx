@@ -6,7 +6,6 @@ import HomePage from './sections/HomePage';
 import ProjectPage from './sections/ProjectPage';
 import ThemeCord from './components/ThemeCord';
 import Terminal from './components/Terminal';
-import PencilCursor from './components/PencilCursor';
 
 function Shell() {
   const { z, vh } = useDesign();
@@ -156,7 +155,6 @@ export default function App() {
     <>
       <ThemeCord className={mobile ? 'is-mobile' : ''} />
       <Terminal />
-      {!mobile && <PencilCursor />}
       {mobile ? (
         <Suspense fallback={null}>
           <MobileSite />
