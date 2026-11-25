@@ -53,7 +53,7 @@ export const CONTACT = {
 };
 
 const shot = (n, caption, ph = true) => ({ src: `/assets/resume/${n}.svg`, caption, ph });
-const png = (n, caption) => ({ src: `/assets/resume/${n}.jpg`, caption, ph: false });
+const png = (n, caption) => ({ src: `/assets/resume/${n}.webp`, caption, ph: false });
 const cert = (file, caption) => ({ src: `/assets/certs/${file}`, caption });
 
 export const EDUCATION = {
@@ -77,7 +77,7 @@ export const INTERNSHIP = {
     'Implemented a responsive UI with Tailwind CSS across all portals.',
     'Added form validation on both the frontend and the backend.',
   ],
-  shots: [{ src: '/assets/certs/mct-internship.jpg', caption: 'Internship completion letter, MCT IT Solutions' }],
+  shots: [{ src: '/assets/certs/mct-internship.webp', caption: 'Internship completion letter, MCT IT Solutions' }],
   tech: 'React 19, TypeScript, Node.js, Express.js, MySQL, Prisma, JWT, Tailwind CSS, Socket.IO',
   repo: 'https://github.com/Urjagajera/EGE-agritech',
 };
@@ -95,10 +95,10 @@ export const PROJECTS = [
     ],
     role: 'I was one of 2 full-stack developers in a 3-member team. I developed the React, TypeScript, Vite and Tailwind CSS frontend, including the full landing page, use case and ER diagrams, an interactive graph with node details, an editable solution blueprint and multilingual support. I also wrote the system prompts, built chat isolation, implemented RAG and chained the AI models into one pipeline for faster execution.',
     metrics: [['8', 'stages, idea to deploy'], ['3', 'LLM providers'], ['2nd', 'prize, CHAOS2COMMIT']],
-    diagram: { src: '/assets/resume/nirman-how-it-works.jpg', caption: 'How Nirman works', whole: true },
+    diagram: { src: '/assets/resume/nirman-how-it-works.webp', caption: 'How Nirman works', whole: true },
     shots: [png('nirman-1', 'Nirman workspaces dashboard'), png('nirman-2', 'CampusBridge — a generated app'), png('photo-nirman-prize', 'Receiving the 2nd prize at CHAOS2COMMIT')],
     tech: 'React, TypeScript, Vite, Tailwind CSS, Python, FastAPI, PostgreSQL, SQLAlchemy, Pydantic, Alembic, JWT, Docker, Groq, Google Gemini, OpenRouter',
-    video: { src: '/assets/resume/nirman-product-demo.mp4', poster: '/assets/resume/nirman-product-demo-poster.jpg', caption: 'Product demo: idea to deployed app, end to end', controls: true, ratio: '1280 / 680' },
+    video: { src: '/assets/resume/nirman-product-demo.mp4', poster: '/assets/resume/nirman-product-demo-poster.webp', caption: 'Product demo: idea to deployed app, end to end', controls: true, ratio: '1280 / 680' },
     achievement: '2nd Prize at CHAOS2COMMIT 2026, organized by Futurizzon Technologies, Ahmedabad.',
   },
   {
@@ -115,8 +115,8 @@ export const PROJECTS = [
       'Covered the frontend and backend with 1,100+ automated tests run in CI on every push.',
     ],
     metrics: [['4,722', 'government schemes'], ['36', 'states & UTs'], ['3', 'languages'], ['1,100+', 'automated tests']],
-    diagram: { src: '/assets/resume/schemesetu-how-it-works.jpg', caption: 'How SchemeSetu works', whole: true },
-    video: { src: '/assets/resume/schemesetu-demo.mp4', poster: '/assets/resume/schemesetu-demo-poster.jpg', caption: 'Search, eligibility filters, scheme details and the Gujarati version', controls: true },
+    diagram: { src: '/assets/resume/schemesetu-how-it-works.webp', caption: 'How SchemeSetu works', whole: true },
+    video: { src: '/assets/resume/schemesetu-demo.mp4', poster: '/assets/resume/schemesetu-demo-poster.webp', caption: 'Search, eligibility filters, scheme details and the Gujarati version', controls: true },
     tech: 'React 19, TypeScript, Vite, Tailwind CSS, Node.js, Express, PostgreSQL, Prisma, Groq, GitHub Actions',
     repo: 'https://github.com/Urjagajera/SchemeSetu',
     live: 'https://schemesetu-chi.vercel.app',
@@ -135,9 +135,9 @@ export const PROJECTS = [
       'Added one-tap demo accounts for every role, backed by sample data, so anyone can try the app without signing up.',
     ],
     metrics: [['5', 'user roles'], ['1-tap', 'progress updates'], ['0', 'sign-up needed for clients']],
-    diagram: { src: '/assets/resume/courtcall-how-it-works.jpg', caption: 'How CourtCall works', whole: true },
+    diagram: { src: '/assets/resume/courtcall-how-it-works.webp', caption: 'How CourtCall works', whole: true },
     // recorded with the one-tap demo accounts (sample data only)
-    video: { src: '/assets/resume/courtcall-demo.mp4', poster: '/assets/resume/courtcall-demo-poster.jpg', caption: 'A junior reports progress; the client and the lawyer see it live', controls: true },
+    video: { src: '/assets/resume/courtcall-demo.mp4', poster: '/assets/resume/courtcall-demo-poster.webp', caption: 'A junior reports progress; the client and the lawyer see it live', controls: true },
     tech: 'React, TypeScript, Vite, Tailwind CSS, Node.js, Express, Zod, PostgreSQL (Supabase), Drizzle ORM, Nexconn Chat SDK, Web Push',
     repo: 'https://github.com/Urjagajera/CourtCall',
     live: 'https://courtcall-kappa.vercel.app',
@@ -155,7 +155,7 @@ export const PROJECTS = [
       'Each interview ends in a report: scores, per-question feedback, “what you could say”, answering-method guides like STAR, and a PDF download.',
       'FastAPI backend with SQLAlchemy and Alembic migrations on Supabase PostgreSQL, a React 19 frontend, and tests run in GitHub Actions on every push.',
     ],
-    diagram: { src: '/assets/resume/crackit-how-it-works.jpg', caption: 'How CrackIt works', whole: true },
+    diagram: { src: '/assets/resume/crackit-how-it-works.webp', caption: 'How CrackIt works', whole: true },
     tech: 'React 19, TypeScript, Vite, Tailwind CSS, Python, FastAPI, SQLAlchemy, Alembic, PostgreSQL (Supabase), Groq, Whisper, sentence-transformers',
     // repo is private, so no link
   },
@@ -175,7 +175,7 @@ export const PROJECTS = [
     metrics: [['9', 'dashboard modules'], ['10', 'table database'], ['2', 'AI modes with memory'], ['365', 'day habit tracker']],
     tech: 'Next.js 16, React 19, TypeScript, Tailwind CSS, Supabase (PostgreSQL), NextAuth, Groq SDK',
     repo: 'https://github.com/Urjagajera/Strux',
-    diagram: { src: '/assets/resume/strux-how-it-works.jpg', caption: 'How Strux works', whole: true },
+    diagram: { src: '/assets/resume/strux-how-it-works.webp', caption: 'How Strux works', whole: true },
   },
   {
     name: 'NutriFit',
@@ -196,10 +196,10 @@ export const PROJECTS = [
     repo: 'https://github.com/Urjagajera/NutriFit',
     // recorded on a local copy with made-up members (no real user data)
     videos: [
-      { label: 'Member side', src: '/assets/resume/nutrifit-user-demo.mp4', poster: '/assets/resume/nutrifit-user-demo-poster.jpg', caption: 'Sign up, health quiz, personal dashboard and progress charts', controls: true },
-      { label: 'Admin side', src: '/assets/resume/nutrifit-admin-demo.mp4', poster: '/assets/resume/nutrifit-admin-demo-poster.jpg', caption: 'Member list, a member’s progress, assigning a diet plan and workout', controls: true },
+      { label: 'Member side', src: '/assets/resume/nutrifit-user-demo.mp4', poster: '/assets/resume/nutrifit-user-demo-poster.webp', caption: 'Sign up, health quiz, personal dashboard and progress charts', controls: true },
+      { label: 'Admin side', src: '/assets/resume/nutrifit-admin-demo.mp4', poster: '/assets/resume/nutrifit-admin-demo-poster.webp', caption: 'Member list, a member’s progress, assigning a diet plan and workout', controls: true },
     ],
-    diagram: { src: '/assets/resume/nutrifit-how-it-works.jpg', caption: 'How NutriFit works', whole: true },
+    diagram: { src: '/assets/resume/nutrifit-how-it-works.webp', caption: 'How NutriFit works', whole: true },
   },
   {
     name: 'Smart Expense Analyzer',
@@ -214,7 +214,7 @@ export const PROJECTS = [
     ],
     shots: [png('expense-1', 'Expense distribution by category')],
     tech: 'Python, csv module, Matplotlib',
-    diagram: { src: '/assets/resume/expense-how-it-works.jpg', caption: 'How Smart Expense Analyzer works', whole: true },
+    diagram: { src: '/assets/resume/expense-how-it-works.webp', caption: 'How Smart Expense Analyzer works', whole: true },
     repo: 'https://github.com/Urjagajera/Smart-Expense-Analyzer',
   },
 ];
@@ -249,25 +249,25 @@ export const LEADERSHIP = [
 // presenting Nirman live to the CHAOS2COMMIT 2026 judges (we won 2nd prize): shown on the Leadership page
 export const LEADERSHIP_VIDEO = {
   src: '/assets/resume/nirman-presentation.mp4',
-  poster: '/assets/resume/nirman-presentation-poster.jpg',
+  poster: '/assets/resume/nirman-presentation-poster.webp',
   caption: 'Presenting Nirman live to the judges at CHAOS2COMMIT 2026 (2nd prize)',
 };
 
 // hosting the IEEE CHARUSAT General Body Meeting (Feb 2025): every chapter's executive team and ~150 students
 export const LEADERSHIP_EVENT_VIDEO = {
   src: '/assets/resume/ieee-gbm.mp4',
-  poster: '/assets/resume/ieee-gbm-poster.jpg',
+  poster: '/assets/resume/ieee-gbm-poster.webp',
   caption: 'Hosting the IEEE CHARUSAT General Body Meeting, Feb 2025: every chapter and ~150 students, with games and ice-breakers',
   controls: true,
   ratio: '9 / 16',
 };
 
 export const LEADERSHIP_MEDIA = [
-  cert('ieee-sb-secretary.jpg', 'IEEE certificate: Secretary, Student Branch'),
-  cert('ieee-wie-secretary.jpg', 'IEEE certificate: Secretary, WIE Affinity Group'),
-  cert('wireshark-workshop.jpg', 'Wireshark workshop, IEEE CHARUSAT SB'),
-  cert('ieee-stem.jpg', 'STEM outreach, IEEE WIE x NSS'),
-  cert('step-talk.jpg', 'STEP Talk, IEEE CSPIT SB'),
+  cert('ieee-sb-secretary.webp', 'IEEE certificate: Secretary, Student Branch'),
+  cert('ieee-wie-secretary.webp', 'IEEE certificate: Secretary, WIE Affinity Group'),
+  cert('wireshark-workshop.webp', 'Wireshark workshop, IEEE CHARUSAT SB'),
+  cert('ieee-stem.webp', 'STEM outreach, IEEE WIE x NSS'),
+  cert('step-talk.webp', 'STEP Talk, IEEE CSPIT SB'),
 ];
 
 export const HACKATHON_STATS = [['5+', 'hackathons'], ['15', 'events volunteered'], ['4', 'events organized'], ['2nd', 'prize at CHAOS2COMMIT']];
@@ -279,7 +279,7 @@ export const HACKATHONS = [
     project: 'Nirman, an AI-powered solution builder',
     role: 'One of 2 full-stack developers: built the React/TypeScript frontend (landing page, use case and ER diagrams, interactive graph, editable solution blueprint, multilingual support), wrote the system prompts, built chat isolation and implemented RAG in the AI pipeline.',
     result: '2nd Prize',
-    media: [png('photo-nirman-prize', 'Receiving the 2nd prize'), cert('chaos2commit-winner.jpg', 'CHAOS2COMMIT winner certificate')],
+    media: [png('photo-nirman-prize', 'Receiving the 2nd prize'), cert('chaos2commit-winner.webp', 'CHAOS2COMMIT winner certificate')],
   },
   {
     name: 'Odoo x CHARUSAT Hackathon 2025',
@@ -288,7 +288,7 @@ export const HACKATHONS = [
     role: 'API & Integration team: financial APIs, backend services, real-time data',
     result: 'Selected for the Project Development Round',
     stack: 'React.js, Node.js, Express.js, PostgreSQL, Python (AI/ML), Kaggle APIs',
-    media: [cert('odoo-hackathon.jpg', 'Odoo x CHARUSAT certificate')],
+    media: [cert('odoo-hackathon.webp', 'Odoo x CHARUSAT certificate')],
   },
   {
     name: 'MSBC Company Hackathon 2025',
@@ -300,7 +300,7 @@ export const HACKATHONS = [
     name: 'Bharatiya Antariksh Hackathon 2026 (ISRO)',
     by: 'Presented by ISRO, powered by Hack2skill',
     result: 'Idea submitted',
-    media: [cert('isro-bah-2026.jpg', 'ISRO participation certificate')],
+    media: [cert('isro-bah-2026.webp', 'ISRO participation certificate')],
   },
   {
     name: 'We For She Hacker-ramp 2026',
@@ -313,8 +313,8 @@ export const CODING_PROFILES = [['1300+', 'problems solved on CodeChef'], ['Diam
 export const ACHIEVEMENTS = [
   { text: '2nd Prize at CHAOS2COMMIT 2026, organized by Futurizzon Technologies, Ahmedabad (Nirman).', img: png('photo-nirman-prize', 'CHAOS2COMMIT 2nd prize') },
   { text: 'Solved 1300+ problems on CodeChef and earned the Problem Solver Diamond Badge, across C, C++, Java, Python and Web Development.', img: cert('codechef-diamond.jpg', 'CodeChef Problem Solver Diamond Badge') },
-  { text: 'NPTEL Elite certification in Theory of Computation, IIT Kanpur (one of 754 candidates certified).', img: cert('nptel-toc.jpg', 'NPTEL Elite: Theory of Computation') },
-  { text: 'Won first place and the Dhyan Chand Trophy in the inter-institute basketball tournament at CHARUSAT.', img: cert('dhyan-chand-cup.jpg', 'Major Dhyan Chand Cup, basketball champions') },
+  { text: 'NPTEL Elite certification in Theory of Computation, IIT Kanpur (one of 754 candidates certified).', img: cert('nptel-toc.webp', 'NPTEL Elite: Theory of Computation') },
+  { text: 'Won first place and the Dhyan Chand Trophy in the inter-institute basketball tournament at CHARUSAT.', img: cert('dhyan-chand-cup.webp', 'Major Dhyan Chand Cup, basketball champions') },
 ];
 
 export const ADDITIONAL = [

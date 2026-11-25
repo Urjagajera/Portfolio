@@ -101,7 +101,7 @@ function Hero({ onQuick }) {
         <a href={R.RESUME_PDF} target="_blank" rel="noreferrer" download className="underline">resume &#8595;</a>
       </div>
       <h1 className="m-0 intro-rise" style={{ '--d': '200ms' }}>
-        <img className="m-wordmark" src="/assets/urja_gajera_wordmark.png" alt="URJA GAJERA" width="1864" height="252" fetchPriority="high" draggable={false} />
+        <img className="m-wordmark" src="/assets/urja_gajera_wordmark.webp" alt="URJA GAJERA" width="1864" height="252" fetchPriority="high" draggable={false} />
       </h1>
       <p className="m-tagline">
         {['Build', '·', 'Create', '·', 'Explore'].map((w, i) => (

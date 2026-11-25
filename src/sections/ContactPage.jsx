@@ -29,7 +29,7 @@ export default function ContactPage({ onGo }) {
 
   return (
     <div className="relative" style={{ height: 2740 }}>
-      <img src={asset('contact_top.jpg')} alt="" draggable={false} className="absolute mul pointer-events-none" style={{ left: 60, top: 0, width: 1290, WebkitMaskImage: 'linear-gradient(#000 70%, transparent)', maskImage: 'linear-gradient(#000 70%, transparent)' }} />
+      <img src={asset('contact_top.webp')} alt="" draggable={false} className="absolute mul pointer-events-none" style={{ left: 60, top: 0, width: 1290, WebkitMaskImage: 'linear-gradient(#000 70%, transparent)', maskImage: 'linear-gradient(#000 70%, transparent)' }} />
       <div className="absolute w-full text-center font-display" style={{ top: 294, fontSize: 50, fontWeight: 800, letterSpacing: '.005em' }}>PROJECT</div>
       <MaskWord word="inq" style={{ position: 'absolute', left: 500, top: 350 }} />
 
@@ -50,10 +50,10 @@ export default function ContactPage({ onGo }) {
         <b style={{ fontWeight: 600 }}>Scope:</b> Our best work lies in brand strategy, visual identity, website design, development, and campaigns. We’re open to other requests, unique ideas and design beyond one medium. Each project scope would be thoroughly discussed.
       </div>
 
-      {img('contact_scissors.jpg', 79, 1393, 535)}
-      {img('contact_calc.jpg', 1460, 1342, 428)}
+      {img('contact_scissors.webp', 79, 1393, 535)}
+      {img('contact_calc.webp', 1460, 1342, 428)}
       <button onClick={() => onGo('programs')} className="absolute bg-transparent border-0" style={{ left: 1015, top: 1465, width: 340, height: 170, transform: 'rotate(-8deg)' }} aria-label="Go browse the program page">
-        <img src={asset('contact_squiggle.jpg')} alt="" draggable={false} className="mul" style={{ width: 374, marginLeft: -20, marginTop: -6 }} />
+        <img src={asset('contact_squiggle.webp')} alt="" draggable={false} className="mul" style={{ width: 374, marginLeft: -20, marginTop: -6 }} />
       </button>
 
       <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="absolute" style={{ left: 0, top: 1868, width: 1890, height: 800 }}>

@@ -35,7 +35,7 @@ export default function LoopVideo({ src, poster, caption, style, className = '',
       <video
         ref={ref}
         src={near ? src : undefined}
-        poster={poster}
+        poster={near ? poster : undefined}
         muted
         loop
         playsInline

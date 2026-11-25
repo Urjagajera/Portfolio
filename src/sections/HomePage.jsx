@@ -66,7 +66,7 @@ function Hero({ onGo }) {
       <div className="absolute w-full flex items-center justify-center pointer-events-auto select-none" style={{ top: 215 }}>
         <h1 className="m-0 flex items-center justify-center intro-rise" style={{ '--d': '120ms' }}>
           <img
-            src="/assets/urja_gajera_wordmark.png"
+            src="/assets/urja_gajera_wordmark.webp"
             alt="URJA GAJERA"
             width="1864"
             height="252"
@@ -120,12 +120,12 @@ function Hero({ onGo }) {
 /* ---------------------------------------- desk backdrop behind the monitor */
 
 // A wooden study desk + wall (public/assets/desk/desk_scene.svg) behind the monitor: corkboard with notes, clock,
-// bookshelf, framed sketch, karate medal and belt, and desk things. browse_scene.png (keyed out) sits in front of it.
+// bookshelf, framed sketch, karate medal and belt, and desk things. browse_scene.webp (keyed out) sits in front of it.
 function DeskBackdrop({ opacity }) {
   const fade = { WebkitMaskImage: 'linear-gradient(transparent, #000 14%)', maskImage: 'linear-gradient(transparent, #000 14%)' };
   return (
     <div className="absolute pointer-events-none select-none" style={{ left: 0, top: 0, width: 1890, height: SCENE_H, opacity, willChange: 'opacity', ...fade }}>
-      <img src="/assets/desk/desk_scene.jpg" alt="" decoding="async" draggable={false} style={{ display: 'block', width: 1890, height: SCENE_H }} />
+      <img src="/assets/desk/desk_scene.webp" alt="" decoding="async" draggable={false} style={{ display: 'block', width: 1890, height: SCENE_H }} />
       <ClockHands />
     </div>
   );
@@ -265,7 +265,7 @@ function Computer({ on, setOn, onOpenProject, onMode }) {
       <div className="sticky" style={{ top: (vh - SCENE_H) || 0, height: SCENE_H, width: 1890 }}>
         <div className="absolute inset-0" style={{ transform: `scale(${scale})`, transformOrigin: `${ORIGIN[0]}px ${ORIGIN[1]}px`, willChange: 'transform' }}>
           <DeskBackdrop opacity={Math.max(1 - clamp((p - 0.12) / 0.45), clamp((q - 0.2) / 0.6))} />
-          <img src={asset('browse_scene.png')} alt="Browse — vintage computer" decoding="async" draggable={false} style={{ position: 'relative', width: 1890, height: SCENE_H, display: 'block' }} />
+          <img src={asset('browse_scene.webp')} alt="Browse — vintage computer" decoding="async" draggable={false} style={{ position: 'relative', width: 1890, height: SCENE_H, display: 'block' }} />
           <LivingDesk active={p < 0.03 || q > 0.97} />
           <div className="absolute left-0 w-full pointer-events-none" style={{ top: 700, height: SCENE_H - 700, background: 'linear-gradient(rgba(250,250,248,0), #fafaf8 70%)', opacity: clamp(q * 2.5) }} />
           {!on && reveal < 0.5 && (
@@ -316,10 +316,10 @@ function HowDo({ onPrograms }) {
     <section id="how-do" className="relative" style={{ height: h - CUT }}>
       <div className="absolute left-0 w-full" style={{ top: -CUT, height: h }}>
       <div className="absolute grain" style={{ left: 0, top: CUT, width: 1890, height: h - CUT - 60, background: '#ececeb' }} />
-      <img src={asset('paper_bottom.jpg')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute left-0" style={{ top: 1138, width: 1890, height: 120 }} />
+      <img src={asset('paper_bottom.webp')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute left-0" style={{ top: 1138, width: 1890, height: 120 }} />
       <img src={asset('dice.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 245, top: 338, width: 95 }} />
-      <img src={asset('star.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 158, top: 426, width: 134 }} />
-      <img src={asset('cat.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 1592, top: 868, width: 235 }} />
+      <img src={asset('star.webp')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 158, top: 426, width: 134 }} />
+      <img src={asset('cat.webp')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 1592, top: 868, width: 235 }} />
       <Doodle n="magnifier" x={1420} y={380} w={130} r={-8} />
       <Doodle n="palette" x={190} y={800} w={140} r={-6} hint="pull me" />
       <Doodle n="code" x={1060} y={470} w={100} r={-6} />
@@ -359,7 +359,7 @@ function TealForm() {
 
   return (
     <section className="relative" style={{ height: 1150 }}>
-      <img src={asset('earphones.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 0, top: 745, width: 290 }} />
+      <img src={asset('earphones.webp')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 0, top: 745, width: 290 }} />
       <div className="absolute grain" style={{ left: 265, top: 155, width: 1265, height: 877, background: '#8fe4e6', borderRadius: 52, transform: 'rotate(-.4deg)', boxShadow: '0 12px 30px rgba(0,0,0,.12)' }} />
       <form
         onSubmit={submit}
@@ -389,7 +389,7 @@ function TealForm() {
         </div>
         <a href="mailto:urjagajera12@gmail.com" className="absolute font-mono font-bold text-[#111] no-underline" style={{ left: 488, top: 748, fontSize: 25 }}>urjagajera12@gmail.com</a>
       </form>
-      <img src={asset('teal_sticker.png')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 1296, top: 571, width: 344 }} />
+      <img src={asset('teal_sticker.webp')} alt="" loading="lazy" decoding="async" draggable={false} className="absolute" style={{ left: 1296, top: 571, width: 344 }} />
       <Doodle n="cloud" x={50} y={170} w={150} r={-5} hint="push me" />
       <Doodle n="cat" x={930} y={800} w={115} r={4} />
       <Doodle n="palette" x={1630} y={190} w={130} r={6} />

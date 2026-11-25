@@ -39,7 +39,7 @@ function Lena({ nav }) {
         <div className="absolute" style={{ left: 0, top: 0 }}>
           <h1 className="font-display m-0" style={{ fontSize: 72, lineHeight: '72px', fontWeight: 800, letterSpacing: '-.02em', transform: 'scaleX(1.22)', transformOrigin: 'left' }}>LENA BALL</h1>
           <div style={{ fontSize: 22, marginTop: 14 }}>://&gt; Concept Ideation | Style Guidance</div>
-          <Img n="lena_banner.jpg" w={835} h={245} style={{ marginTop: 30 }} />
+          <Img n="lena_banner.webp" w={835} h={245} style={{ marginTop: 30 }} />
         </div>
         <div className="absolute" style={{ left: 0, top: 0 }}><Meta industry="Wellness, Coaching" deliverables="Brand identity, Logo Concept. Color Palette, Typography Guidelines" /></div>
       </div>
@@ -50,7 +50,7 @@ function Lena({ nav }) {
             <H3>THE CHALLENGE</H3>
             <P>In a crowded wellness space, the challenge was to develop a brand identity that felt distinctive while remaining calm, grounded, and credible. Through our conversations, it became clear that the brand was rooted in ideas of feminine wisdom, serenity, trust, and connection to nature. This led us towards an earth-inspired visual language that could express both emotional warmth and mature stability.</P>
           </div>
-          <Img n="lena_cards.jpg" w={517} h={377} style={{ marginTop: 56 }} />
+          <Img n="lena_cards.webp" w={517} h={377} style={{ marginTop: 56 }} />
           <div style={{ marginTop: 56 }}>
             <H3>LOGO AND TYPOGRAPHY</H3>
             <P style={{ marginBottom: 30 }}>Nature is the central motif of the identity. Inspired by the idea of growth between heaven and earth, the hydrangea was chosen as the defining symbol, both for its meaning and for how naturally its form complemented the circular logo structure. Rendered in delicate line art, the flower expressed nurture, while the visible roots suggested growth through both aspiration and introspection.</P>
@@ -58,13 +58,13 @@ function Lena({ nav }) {
           </div>
         </div>
         <div style={{ width: 544 }}>
-          <Img n="lena_palette.jpg" w={544} h={411} />
+          <Img n="lena_palette.webp" w={544} h={411} />
           <div style={{ marginTop: 90 }}>
             <H3>COLOR PALETTE</H3>
             <P>To reflect the client’s emphasis on femininity, wisdom, and serenity while avoiding pastel tones, we developed a palette grounded in warmth, versatility, and emotional balance. Seashell peach was established as the primary background colour for the logo, with wider application across Instagram posts, website sections, and other brand materials.</P>
             <P>The palette was structured into four colour families,yellow, green, blue, and peach, each with light, saturated, and dark tonal variations. These tones were designed to be mixed and matched rather than used all at once, allowing for more balanced and complementary combinations. In practice, lighter shades support backgrounds, while darker tones are used for accents and text, helping the identity remain soft, grounded, and flexible across digital applications.</P>
           </div>
-          <Img n="lena_logo.jpg" w={544} h={434} style={{ marginTop: 52 }} />
+          <Img n="lena_logo.webp" w={544} h={434} style={{ marginTop: 52 }} />
         </div>
       </div>
       <div style={{ marginTop: 74 }}>
@@ -84,7 +84,7 @@ function Busy({ nav }) {
         <div className="absolute" style={{ left: 0, top: 0 }}>
           <h1 className="font-display m-0" style={{ fontSize: 72, lineHeight: '72px', fontWeight: 800, letterSpacing: '-.02em', whiteSpace: 'nowrap', transform: 'scaleX(1.12)', transformOrigin: 'left' }}>BUSY BUT THRIVING</h1>
           <div style={{ fontSize: 22, marginTop: 14 }}>://&gt; Print design | Journal Design</div>
-          <img src={asset('busy_covers.jpg')} alt="" draggable={false} style={{ display: 'block', width: 767, height: 232, marginTop: 24 }} />
+          <img src={asset('busy_covers.webp')} alt="" draggable={false} style={{ display: 'block', width: 767, height: 232, marginTop: 24 }} />
         </div>
         <Meta industry="E-Commerce, Print" deliverables="Cover Designs, Spread Designs, Page Content, Body Copy" />
       </div>
@@ -96,13 +96,13 @@ function Busy({ nav }) {
             <P>When developing the idea of a self improvement journal, we looked to spring as the project’s emotional and visual foundation – a season in which life begins to return after winter, and softness carries its own quiet momentum.</P>
             <P>From there, the journal was shaped around the idea of blooming: not as a final state, but as an unfolding. This became the conceptual centre of the book, influencing both the tone of the writing and the visual direction of the design. The result was a journal intended to feel uplifting without becoming overly prescriptive or structured. Importance was placed on maintaining warmth and enjoyment.</P>
           </div>
-          <Img n="busy_spread1.jpg" w={553} h={343} style={{ marginTop: 40, border: 0 }} />
+          <Img n="busy_spread1.webp" w={553} h={343} style={{ marginTop: 40, border: 0 }} />
           <div style={{ marginTop: 40 }}>
             <H3>CONTENT DESIGN</H3>
             <P>The interior was designed to support both reflection and routine. Rather than creating pages that felt rigid or overly optimized, the aim was to offer a framework that could hold different forms of expression: writing, doodling, sticker placement, small check-ins, and moments of pause.</P>
             <P>The introductory spread was treated as an invitation rather than instruction. It guides the reader into the journal’s mindset, reinforcing the idea that growth does not arrive through perfection, but through participation.</P>
           </div>
-          <Img n="busy_pattern.jpg" w={553} h={440} style={{ marginTop: 40 }} />
+          <Img n="busy_pattern.webp" w={553} h={440} style={{ marginTop: 40 }} />
           <div style={{ marginTop: 8 }}>
             <H3>PAGE LOGIC</H3>
             <P>The left-hand side is designed as a simplified checkpoint area; a quieter framework for daily maintenance and self-observation.<br />Clear subheadings help to preserve the aesthetic while making each section feel light and approachable.</P>
@@ -113,20 +113,20 @@ function Busy({ nav }) {
           </div>
         </div>
         <div style={{ width: 528 }}>
-          <Img n="busy_mock.jpg" w={546} h={665} style={{ border: 0, marginLeft: 26 }} />
+          <Img n="busy_mock.webp" w={546} h={665} style={{ border: 0, marginLeft: 26 }} />
           <div style={{ marginTop: 40 }}>
             <H3>COVER SYSTEM</H3>
             <P>The cover direction drew directly from the project’s central metaphor. Floral motifs were introduced as a visual expression of emergence, softness, and growth, positioning the book for a teen and young adult audience.</P>
             <P>The cover was developed in an assortment of colours, suggesting the passage of time. The different colourways subtly reflecting the four quarters of the year. The effect was both practical and symbolic: a journal that could feel personal in selection, yet still belong to a wider seasonal logic.</P>
           </div>
-          <Img n="busy_spread2.jpg" w={550} h={352} style={{ marginTop: 36, border: 0, marginLeft: 10 }} />
+          <Img n="busy_spread2.webp" w={550} h={352} style={{ marginTop: 36, border: 0, marginLeft: 10 }} />
           <div style={{ marginTop: 44 }}>
             <H3>TYPOGRAPHY</H3>
             <P>Marker-style typography was selected for the title, imparting a sense of comfort and approachability to the cover. Its organic nature softens the overall appearance, creating a more personal touch and reducing rigidity. The graphic floral design letters enhance the playful aesthetic, providing visual contrast between the bold and delicate characters on the cover.</P>
             <P>For the remainder of the journal, typography was approached with clarity and familiarity in mind. A classic typewriter font was utilized for the interior, ensuring that the pages evoke nostalgia while remaining easy to read.</P>
           </div>
-          <Img n="busy_spread3.jpg" w={570} h={364} style={{ marginTop: 30, border: 0, marginLeft: 10 }} />
-          <Img n="busy_spread4.jpg" w={570} h={383} style={{ marginTop: 30, border: 0, marginLeft: 10 }} />
+          <Img n="busy_spread3.webp" w={570} h={364} style={{ marginTop: 30, border: 0, marginLeft: 10 }} />
+          <Img n="busy_spread4.webp" w={570} h={383} style={{ marginTop: 30, border: 0, marginLeft: 10 }} />
           <div style={{ marginTop: 38 }}>
             <H3>OUTCOME</H3>
             <P>The result is a light-hearted, easy-going journal with thoughtful page arrangements, inviting stressless participation. The option to choose different color covers adds more to the experience of discovery and curiosity for the buyer. For people who love to collect beautiful books, this collection will also look aesthetically wonderful on the shelf!</P>

@@ -3,7 +3,7 @@ import * as R from '../data/resume';
 
 // The study desk behind the monitor comes alive: every object painted on it is clickable. Hover draws a
 // pencil circle around it; a click pins a taped paper note with that object's story and a small animation.
-// Coordinates are in the 1890 x 1065 scene space (desk_scene.jpg is drawn at 1.5x that).
+// Coordinates are in the 1890 x 1065 scene space (desk_scene.webp is drawn at 1.5x that).
 
 const SKILL_SPINES = R.SKILLS.slice(0, 5).map(([group, list]) => [group, list.split(', ').slice(0, 4).join(' · ')]);
 const SPINE_COLORS = ['#c39bf8', '#fdeb7a', '#f4717f', '#9be3ea', '#9db8f6'];

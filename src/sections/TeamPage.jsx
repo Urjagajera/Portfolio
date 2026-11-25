@@ -10,7 +10,7 @@ export default function TeamPage() {
 
   return (
     <div className="relative" style={{ height: 2150 }}>
-      <img src={asset('team_scene.jpg')} alt="Team" draggable={false} className="absolute mul" style={{ left: 50, top: 0, width: 1840 }} />
+      <img src={asset('team_scene.webp')} alt="Team" draggable={false} className="absolute mul" style={{ left: 50, top: 0, width: 1840 }} />
 
       {/* photo hit-areas: a little wiggle on tap/hover */}
       {[[543, 794, 236, 390], [779, 736, 390, 440], [1172, 794, 290, 372]].map(([l, t, w, h], i) => (

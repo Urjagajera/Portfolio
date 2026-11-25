@@ -172,7 +172,7 @@ function Projects() {
             <>
               <Label>{p.diagram.caption}</Label>
               <button onClick={() => open([p.diagram], 0)} className="resume-thumb" style={{ padding: 0, border: 0, background: 'transparent', width: '100%', display: 'block' }}>
-                <img src={p.diagram.src} alt={p.diagram.caption} draggable={false} style={{ width: '100%', display: 'block', borderRadius: 10, border: '1.5px solid #222' }} />
+                <img src={p.diagram.src} alt={p.diagram.caption} loading="lazy" decoding="async" draggable={false} style={{ width: '100%', display: 'block', borderRadius: 10, border: '1.5px solid #222' }} />
               </button>
             </>
           )}

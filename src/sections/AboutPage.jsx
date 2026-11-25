@@ -12,10 +12,10 @@ export default function AboutPage() {
   );
   return (
     <div className="relative" style={{ height: 2380 }}>
-      {img('about_top.jpg', 60, 0, 1828)}
+      {img('about_top.webp', 60, 0, 1828)}
 
       {/* decorations */}
-      {img('about_pen.jpg', 1590, 560, 270)}
+      {img('about_pen.webp', 1590, 560, 270)}
       {img('about_gummy_y.jpg', 140, 520, 105)}
       {img('about_floppy.jpg', 80, 930, 167)}
       {img('about_squiggle.jpg', 1480, 1780, 240)}
